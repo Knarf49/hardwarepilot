@@ -16,6 +16,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
   const { isOpen, activeThreadId, toggle, close, setActiveThreadId } = useChatStore();
   const [input, setInput] = useState("");
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
 
   const transport = useMemo(() => new TextStreamChatTransport({ api: "/api/chat" }), []);
@@ -68,7 +69,10 @@ export function ChatDock({ projectId }: { projectId?: string }) {
     fd.append("title", "New Chat");
     if (projectId) fd.append("projectId", projectId);
     const result = await createThread(null, fd);
-    if (result.data) setActiveThreadId(result.data.id);
+    if (result.data) {
+      setActiveThreadId(result.data.id);
+      setRefreshKey((k) => k + 1);
+    }
   }, [projectId, setActiveThreadId]);
 
   const handleSelectThread = useCallback(
@@ -110,6 +114,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           <ThreadSelector
             projectId={projectId ?? null}
             activeThreadId={activeThreadId}
+            refreshKey={refreshKey}
             onSelect={handleSelectThread}
             onNew={handleNewThread}
           />

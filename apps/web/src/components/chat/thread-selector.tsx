@@ -14,11 +14,13 @@ type Thread = {
 export function ThreadSelector({
   projectId,
   activeThreadId,
+  refreshKey,
   onSelect,
   onNew,
 }: {
   projectId: string | null;
   activeThreadId: string | null;
+  refreshKey: number;
   onSelect: (id: string) => void;
   onNew: () => void;
 }) {
@@ -29,9 +31,10 @@ export function ThreadSelector({
     if (result.data) setThreads(result.data);
   }, [projectId]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: refreshKey triggers re-fetch after new thread
   useEffect(() => {
     load();
-  }, [load]);
+  }, [load, refreshKey]);
 
   return (
     <div className="border-b border-neutral-800 px-4 py-2">
