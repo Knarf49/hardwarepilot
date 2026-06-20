@@ -199,7 +199,8 @@ function ChatMessages({
               if (
                 part.type === "step-start" ||
                 part.type === "step-finish" ||
-                part.type === "tool-invocation"
+                part.type === "tool-invocation" ||
+                part.type?.startsWith("reasoning")
               ) {
                 return null;
               }
