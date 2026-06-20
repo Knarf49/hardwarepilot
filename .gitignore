@@ -46,3 +46,6 @@ playwright-report/
 
 # turbo
 .turbo/
+
+# python build artifacts
+*.egg-info/
