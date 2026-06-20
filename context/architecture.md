@@ -143,14 +143,19 @@ Each project maintains:
 
 ## Project
 
-Top-level container.
+Top-level container for a hardware design.
 
 Stores:
 
-- Metadata
-- Ownership
-- Project settings
-- Version history
+- Metadata (name, description)
+- Ownership (workspaceId)
+- Created/updated timestamps
+
+Projects are organized under Workspaces. All domain entities (Form, Module,
+Constraint, Decision, Artifact) belong to a single Project.
+
+Enclosure is **not** a standalone entity. It is an Artifact of type `stl`,
+generated from Form. See Artifacts section.
 
 ---
 
@@ -206,6 +211,56 @@ Modules are independent from PCB layouts.
 The system reasons about modules before boards, and components within modules
 before traces.
 
+### Database Schema
+
+```
+Module
+├─ id            UUID PK
+├─ projectId     UUID FK → Project
+├─ formId        UUID FK → Form (nullable — module created before placement)
+├─ name          VARCHAR        "Power", "MCU"
+├─ type          VARCHAR        power | mcu | sensor | display | battery
+│                               connectivity | storage | actuator | custom
+├─ description   TEXT (nullable)
+├─ ports         JSONB          [{ portId, name, direction, protocol?, voltage? }]
+├─ position      JSONB (nullable)  { x, y, z }  mm from form origin
+├─ rotation      JSONB (nullable)  { x, y, z }  degrees
+├─ dimension     JSONB          { w, h, d }  mm
+├─ spanning      JSONB (nullable)  [{ x, y }]  poly region on form surface
+├─ status        VARCHAR        proposed | placed | validated | rejected
+├─ createdAt     TIMESTAMP
+└─ updatedAt     TIMESTAMP
+```
+
+Relationships:
+
+- `components: Component[]` — one-to-many
+- `nets: Net[]` — one-to-many
+- `constraints: Constraint[]` — constraints targeting this module
+- `connectionsFrom: ModuleConnection[]` — outgoing edges
+- `connectionsTo: ModuleConnection[]` — incoming edges
+
+JSONB examples:
+
+```jsonc
+// ports
+[
+  { "portId": "p1", "name": "I2C_SCL", "direction": "bidirectional", "protocol": "I2C" },
+  { "portId": "p2", "name": "I2C_SDA", "direction": "bidirectional", "protocol": "I2C" },
+  { "portId": "p3", "name": "3V3_OUT", "direction": "out", "protocol": "power", "voltage": 3.3 },
+  { "portId": "p4", "name": "GND", "direction": "bidirectional", "protocol": "power" },
+  { "portId": "p5", "name": "GPIO0", "direction": "bidirectional", "protocol": "gpio" }
+]
+// position
+{ "x": 100, "y": 50, "z": 0 }
+// rotation
+{ "x": 0, "y": 0, "z": 45 }
+// dimension
+{ "w": 30, "h": 20, "d": 5 }
+// spanning
+[{ "x": 0, "y": 0 }, { "x": 30, "y": 0 }, { "x": 30, "y": 20 }, { "x": 0, "y": 20 }]
+```
+
 ---
 
 ## Constraints
@@ -247,21 +302,277 @@ Decisions become long-term project memory.
 
 ---
 
-## Artifacts
+## Component
 
-Generated outputs.
+A discrete electronic part within a Module.
 
 Examples:
 
-- STL
-- STEP
-- BOM
-- PCB Drafts
-- Manufacturing Reports
-- SPICE Netlist (derived from component + net graph, always regenerable)
-- Simulation Results (waveform data, operating point tables)
+- R1 (10kΩ resistor, 0805)
+- C3 (100nF capacitor, 0603)
+- U1 (ESP32-WROOM-32E IC, QFN-48)
+- Q1 (2N2222 NPN transistor, TO-92)
+- J1 (USB-C connector, through-hole)
 
-Artifacts are derived from the graph.
+Components contain pins (stored as JSONB), values, tolerances, part numbers,
+and footprints. Components are wired together via Nets.
+
+---
+
+## Net
+
+A named electrical connection between component pins.
+
+A Net connects one or more component pins within a module, and may cross module
+boundaries via module ports (referenced in the connections array alongside
+component pin references).
+
+Examples:
+
+- NET_VCC (connects R1.pin1, U1.VCC, J1.VCC)
+- I2C_SCL (connects U1.pin12, J1.pin5, modulePort "p1")
+
+Nets are the primary input for SPICE netlist generation.
+
+---
+
+## ModuleConnection
+
+An edge in the Hardware Context Graph connecting two module ports.
+
+Represents the relationship between functional modules:
+
+- **electrical**: I2C bus, SPI bus, power rail
+- **mechanical**: physical adjacency or shared mounting
+- **placement**: co-location requirement
+- **manufacturing**: shared assembly step
+
+Example:
+
+MCU.I2C_SCL → Sensor.I2C_SCL (electrical, bidirectional, I2C)
+
+---
+
+## AIProposal
+
+A suggestion from the AI layer requiring user action.
+
+Tracks the lifecycle of AI-initiated changes:
+
+- `pending`: awaiting user decision
+- `approved`: user accepted, pending application
+- `rejected`: user declined
+- `applied`: change has been committed to the graph
+
+Each proposal records which agent generated it, the risk tier (low/medium/high),
+and which graph nodes would be affected. Low-risk proposals may auto-apply
+(skip pending state) per Rule 5.
+
+---
+
+## Artifacts
+
+Generated outputs — all derived from the Hardware Context Graph, all disposable
+(Invariant #5).
+
+Unified under a single Artifact table with a `type` discriminator:
+
+| Type | Description | FK |
+|------|-------------|----|
+| `stl` | Enclosure mesh (3D printable) | formId |
+| `step` | Enclosure CAD (future) | formId |
+| `bom` | Bill of materials | projectId |
+| `spice_netlist` | Generated SPICE netlist | moduleId |
+| `sim_result` | Waveform data, operating point tables | moduleId |
+| `pcb_draft` | PCB layout draft | formId |
+| `manufacturing_report` | DFM/DFA report | projectId |
+
+Enclosure is `type: "stl"` with `formId` FK — generated from Form polygon data,
+always regenerable. No separate Enclosure table.
+
+Each Artifact is versioned (`version` field, integer, starts at 1). Previous
+versions are never overwritten (Rule 11).
+
+---
+
+# Database Schema
+
+Complete PostgreSQL schema for the Hardware Context Graph. All tables use
+UUID primary keys and Prisma v7 conventions (camelCase, `@id @default(uuid())`).
+
+## Tables
+
+```
+Table Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+Table Project {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  description String?
+  createdAt   DateTime
+  updatedAt   DateTime
+}
+
+Table Form {
+  id               String   @id @default(uuid())
+  projectId        String
+  polygon          Json     // { vertices: {x,y}[], edges?: [{index, curve?:{type,cp1,cp2}}] }
+  dimension        Json     // { w, h, d }  mm
+  interactionZones Json?    // [{ name, type, vertices: {x,y}[] }]
+  requirements     String?  // mechanical requirements text
+  createdAt        DateTime
+  updatedAt        DateTime
+}
+
+Table Module {
+  id          String   @id @default(uuid())
+  projectId   String
+  formId      String?  // null until placed on form
+  name        String
+  type        String   // power | mcu | sensor | display | battery | connectivity | storage | actuator | custom
+  description String?
+  ports       Json     // [{ portId, name, direction: "in"|"out"|"bidirectional", protocol?, voltage? }]
+  position    Json?    // { x, y, z }  mm from form origin
+  rotation    Json?    // { x, y, z }  degrees
+  dimension   Json     // { w, h, d }  mm
+  spanning    Json?    // [{ x, y }]  poly region on form surface
+  status      String   // proposed | placed | validated | rejected
+  createdAt   DateTime
+  updatedAt   DateTime
+}
+
+Table Component {
+  id        String   @id @default(uuid())
+  moduleId  String
+  type      String   // resistor | capacitor | inductor | diode | transistor | ic | connector | voltage_source | current_source | custom
+  name      String   // "R1", "C3", "U1", "J2"
+  value     String?  // "10k", "100nF", "ESP32-WROOM"
+  tolerance String?  // "5%", "±10%"
+  partNumber String?
+  footprint String?  // "0805", "SOIC-8"
+  pins      Json     // [{ pinId, name, number? }]
+  position  Json?    // { x, y }  within module canvas
+  rotation  Json?    // { z }  degrees
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+Table Net {
+  id          String   @id @default(uuid())
+  moduleId    String
+  projectId   String
+  name        String   // "NET_VCC", "I2C_SCL"
+  connections Json     // [{ componentId, pinId } | { modulePort: "portId" }]
+  createdAt   DateTime
+  updatedAt   DateTime
+}
+
+Table ModuleConnection {
+  id              String   @id @default(uuid())
+  projectId       String
+  sourceModuleId  String
+  targetModuleId  String
+  sourcePortId    String
+  targetPortId    String
+  type            String   // electrical | mechanical | placement | manufacturing
+  createdAt       DateTime
+  updatedAt       DateTime
+}
+
+Table Constraint {
+  id        String   @id @default(uuid())
+  projectId String
+  moduleId  String?  // null = project-level constraint
+  domain    String   // mechanical | electrical | manufacturing | assembly
+  rule      String   // "Battery must fit within enclosure"
+  expression Json?   // { op, left, right }  machine-readable
+  priority  String   // must | should | may
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+Table Decision {
+  id               String   @id @default(uuid())
+  projectId        String
+  actor            String   // ai | user
+  decision         String
+  reason           String
+  tradeoffs        String?
+  alternatives     Json?    // ["option A", "option B"]
+  affectedNodeType String?  // module | form | component
+  affectedNodeId   String?
+  createdAt        DateTime
+}
+
+Table AIProposal {
+  id            String   @id @default(uuid())
+  projectId     String
+  agentType     String   // intent | module | constraint | circuit | enclosure | review
+  riskTier      String   // low | medium | high
+  title         String
+  description   String
+  reason        String
+  tradeoffs     String?
+  alternatives  Json?
+  affectedNodes Json?    // [{ type: "module", id: "..." }, ...]
+  status        String   // pending | approved | rejected | applied
+  createdAt     DateTime
+  updatedAt     DateTime
+}
+
+Table Artifact {
+  id        String   @id @default(uuid())
+  projectId String
+  formId    String?  // null unless type in (stl, step, pcb_draft)
+  moduleId  String?  // null unless type in (spice_netlist, sim_result)
+  type      String   // stl | step | bom | spice_netlist | sim_result | pcb_draft | manufacturing_report
+  name      String   // "Enclosure v1", "SPICE Netlist Rev 2"
+  filePath  String?  // storage path
+  metadata  Json?    // per-type extra data
+  version   Int      @default(1)
+  createdAt DateTime
+  updatedAt DateTime
+}
+```
+
+## Relationships
+
+```
+Workspace  1──N  Project
+Project   1──N  Form
+Project   1──N  Module
+Project   1──N  ModuleConnection
+Project   1──N  Constraint
+Project   1──N  Decision
+Project   1──N  AIProposal
+Project   1──N  Artifact
+Module    1──N  Component
+Module    1──N  Net
+Form      1──N  Artifact   (via formId — stl, step, pcb_draft)
+Module    1──N  Artifact   (via moduleId — spice_netlist, sim_result)
+```
+
+## Key Design Decisions
+
+1. **No Enclosure table** — Enclosure is an Artifact (`type: "stl"`, `formId` FK).
+   Generated from Form polygon data, always regenerable (Invariant #5).
+2. **JSONB for nested structures** — ports, position, rotation, dimension,
+   spanning, pins, connections, polygon — all use PostgreSQL JSONB via
+   Prisma `Json` type. Validated by Zod on write (code-standards.md).
+3. **Artifact discriminator** — single table for all generated outputs with
+   `type` enum. Adding a new output type = new enum value, not new table.
+4. **Nullable FKs in Artifact** — `formId` and `moduleId` populated
+   conditionally based on artifact type. Enforced at application level.
+5. **Module.fromId nullable** — modules are defined before placement.
+   Module can exist without being assigned to a form region.
+6. **Net spans modules** — `connections` array can reference both component
+   pins and module ports, enabling cross-module net definitions for SPICE.
 
 ---
 

@@ -39,8 +39,9 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - [x] Next.js 16 + Prisma v7 + PostgreSQL setup (Docker)
 - [x] Project model + Prisma schema + migrations
 - [ ] Project list + create + detail pages
-- [ ] Form input: draw outline / upload sketch / describe shape
+- [~] Form input: draw outline / upload sketch / describe shape
   - Data format: polygon points + curve hint metadata (JSONB), see architecture.md Form properties
+  - Complete DB schema finalized (11 tables): Workspace, Project, Form, Module, Component, Net, ModuleConnection, Constraint, Decision, AIProposal, Artifact — see architecture.md Database Schema
 
 ## Relevant Context
 
