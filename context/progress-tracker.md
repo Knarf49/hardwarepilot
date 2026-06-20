@@ -109,7 +109,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** In Progress (40%)
+**Status:** In Progress (50%)
 
 ## Tasks
 
@@ -122,7 +122,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
 - [x] AI chat dock (free-form questions)
 - [x] Activity / Decisions feed + proposal Approve/Reject UI
-- [ ] Risk-tier enforcement (low = auto, medium / high = proposal)
+- [x] Risk-tier enforcement (low = auto, medium / high = proposal)
 
 ## Relevant Context
 
