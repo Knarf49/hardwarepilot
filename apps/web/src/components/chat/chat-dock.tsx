@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 import { DefaultChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,15 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/stores/chat-store";
 import { ThreadSelector } from "./thread-selector";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function useProjectIdFromPath(): string | undefined {
+  const pathname = usePathname();
+  if (!pathname) return undefined;
+  const seg = pathname.split("/")[2];
+  return seg && UUID_RE.test(seg) ? seg : undefined;
+}
 
 async function saveMsg(threadId: string, role: string, parts: unknown) {
   await fetch("/api/messages", {
@@ -30,6 +40,8 @@ export function ChatDock({ projectId }: { projectId?: string }) {
   const { isOpen, activeThreadId, toggle, close, setActiveThreadId } = useChatStore();
   const [refreshKey, setRefreshKey] = useState(0);
   const titleSetRef = useRef(new Set<string>());
+  const pathProjectId = useProjectIdFromPath();
+  const activeProjectId = projectId ?? pathProjectId;
 
   const handleSend = useCallback(
     (text: string) => {
@@ -50,7 +62,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
 
   const handleNewThread = useCallback(async () => {
     const body: Record<string, string> = { title: "New Chat" };
-    if (projectId) body.projectId = projectId;
+    if (activeProjectId) body.projectId = activeProjectId;
     const res = await fetch("/api/threads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,7 +73,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
       setActiveThreadId(data.id);
       setRefreshKey((k) => k + 1);
     }
-  }, [projectId, setActiveThreadId]);
+  }, [activeProjectId, setActiveThreadId]);
 
   return (
     <>
@@ -93,7 +105,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           </div>
 
           <ThreadSelector
-            projectId={projectId ?? null}
+            projectId={activeProjectId ?? null}
             activeThreadId={activeThreadId}
             refreshKey={refreshKey}
             onSelect={setActiveThreadId}
@@ -103,7 +115,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           <ChatMessages
             key={activeThreadId ?? "no-thread"}
             threadId={activeThreadId}
-            projectId={projectId}
+            projectId={activeProjectId}
             onSend={handleSend}
           />
         </div>
@@ -125,6 +137,7 @@ function ChatMessages({
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
+  const justLoadedRef = useRef(false);
 
   const transport = useMemo(
     () =>
@@ -148,6 +161,7 @@ function ChatMessages({
           setInitialMessages(msgs);
           setMessages(msgs);
           loadedRef.current = true;
+          justLoadedRef.current = true;
         }
       });
     } else {
@@ -157,6 +171,10 @@ function ChatMessages({
   }, [threadId, setMessages]);
 
   useEffect(() => {
+    if (justLoadedRef.current) {
+      justLoadedRef.current = false;
+      return;
+    }
     const last = messages[messages.length - 1];
     if (last && last.role === "assistant" && status === "ready" && threadId) {
       saveMsg(threadId, "assistant", last.parts);
