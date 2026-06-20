@@ -155,6 +155,9 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
       ref={containerRef}
       className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden [&_.react-flow__pane]:cursor-auto"
     >
+      <style>
+        {".react-flow__controls-button svg{fill:black}"}
+      </style>
       <ContextMenu open={contextOpen} onOpenChange={setContextOpen}>
         <ContextMenuTrigger className="w-full h-full p-0 border-0">
           <ReactFlow
@@ -176,7 +179,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
             className="bg-neutral-950"
           >
             <Background color="#262626" gap={20} />
-            <Controls className="bg-neutral-900 border-neutral-800 [&_button]:text-black [&_svg]:fill-black" />
+            <Controls className="bg-neutral-900 border-neutral-800 [&_button]:text-black" />
             <MiniMap
               nodeColor="#7C5CFC"
               maskColor="rgba(0,0,0,0.7)"
