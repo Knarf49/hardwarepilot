@@ -1,0 +1,48 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# next.js
+.next/
+out/
+
+# build
+dist/
+build/
+
+# env
+.env
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# debug
+*.log
+.pnpm-debug.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# testing
+coverage/
+test-results/
+playwright-report/
+
+# turbo
+.turbo/
