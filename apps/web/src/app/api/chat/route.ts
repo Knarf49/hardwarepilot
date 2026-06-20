@@ -2,11 +2,11 @@ import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { streamText } from "ai";
 import { createChatTools } from "@/lib/chat-tools";
 
-const apiKey = process.env.OPENROUTER_API_KEY;
-if (!apiKey) throw new Error("OPENROUTER_API_KEY environment variable is not set");
-const openrouter = createOpenAICompatible({
-  name: "openrouter",
-  baseURL: "https://openrouter.ai/api/v1",
+const apiKey = process.env.OPENCODE_API_KEY;
+if (!apiKey) throw new Error("OPENCODE_API_KEY environment variable is not set");
+const opencode = createOpenAICompatible({
+  name: "opencode-go",
+  baseURL: "https://opencode.ai/zen/go/v1",
   apiKey,
 });
 
@@ -19,9 +19,7 @@ You have tools to:
 - Add constraints (addConstraint)
 - Generate SPICE netlists (generateNetlist)
 
-When the user asks you to do something, use the appropriate tool. If you read project state first to understand what exists, you can make better recommendations.
-
-Be concise. When creating things, explain what you did briefly.`;
+When the user asks you to do something, use the appropriate tool. Be concise.`;
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -47,12 +45,12 @@ export async function POST(request: Request) {
   const tools = projectId ? createChatTools(projectId) : {};
 
   const result = streamText({
-    model: openrouter("openai/gpt-oss-120b:free"),
+    model: opencode("deepseek-v4-flash"),
     system: SYSTEM_PROMPT,
     messages: converted,
     tools,
     maxSteps: 10,
   });
 
-  return result.pipeUIMessageStreamToResponse({});
+  return result.toUIMessageStreamResponse();
 }

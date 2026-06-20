@@ -196,7 +196,7 @@ function ChatMessages({
             )}
           >
             {msg.parts?.map((part, i) => {
-              if (part.type === "text") {
+              if (part.type === "text" && part.text) {
                 if (msg.role === "assistant") {
                   return (
                     // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
@@ -205,6 +205,14 @@ function ChatMessages({
                 }
                 // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
                 return <span key={i}>{part.text}</span>;
+              }
+              if (part.type === "step-start" || part.type === "step-finish" || part.type === "tool-invocation") {
+                return null;
+              }
+              const text = (part as { text?: string }).text;
+              if (text) {
+                // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
+                return <span key={i}>{text}</span>;
               }
               return null;
             })}

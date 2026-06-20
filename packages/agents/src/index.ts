@@ -3,7 +3,7 @@ export { constraintAgent } from "./agents/constraint";
 export { intentAgent } from "./agents/intent";
 export { moduleAgent } from "./agents/module";
 export { reviewAgent } from "./agents/review";
-export { flashModel, openrouter, proModel } from "./config";
+export { flashModel, opencode, proModel } from "./config";
 export type { CircuitValidation, SimulationResult } from "./schemas/circuit";
 export type { ConstraintCheck } from "./schemas/constraint";
 export type { EnclosureGen } from "./schemas/enclosure";
