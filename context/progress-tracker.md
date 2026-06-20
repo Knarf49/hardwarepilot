@@ -109,7 +109,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** In Progress (30%)
+**Status:** In Progress (40%)
 
 ## Tasks
 
@@ -121,7 +121,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - [ ] Constraint negotiation engine (Python) — mechanical + electrical
 - [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
 - [x] AI chat dock (free-form questions)
-- [ ] Activity / Decisions feed + proposal Approve/Reject UI
+- [x] Activity / Decisions feed + proposal Approve/Reject UI
 - [ ] Risk-tier enforcement (low = auto, medium / high = proposal)
 
 ## Relevant Context
