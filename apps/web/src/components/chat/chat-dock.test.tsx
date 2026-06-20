@@ -14,6 +14,10 @@ vi.mock("ai", () => ({
   TextStreamChatTransport: vi.fn(),
 }));
 
+vi.mock("react-markdown", () => ({
+  default: ({ children }: { children: string }) => children,
+}));
+
 vi.mock("@/actions/chat", () => ({
   getThreads: async () => ({ data: [], error: null }),
   loadMessages: async () => ({ data: [], error: null }),
