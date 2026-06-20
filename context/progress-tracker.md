@@ -109,7 +109,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** In Progress (10%)
+**Status:** In Progress (20%)
 
 ## Tasks
 
@@ -120,7 +120,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - [ ] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent, Circuit Agent
 - [ ] Constraint negotiation engine (Python) — mechanical + electrical
 - [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
-- [ ] AI chat dock (free-form questions)
+- [x] AI chat dock (free-form questions)
 - [ ] Activity / Decisions feed + proposal Approve/Reject UI
 - [ ] Risk-tier enforcement (low = auto, medium / high = proposal)
 

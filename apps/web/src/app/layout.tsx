@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
+import { ChatDock } from "@/components/chat/chat-dock";
 import "./globals.css";
 
 const inter = Inter({
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
         </nav>
         <main className="flex-1 p-6">{children}</main>
+        <ChatDock />
       </body>
     </html>
   );
