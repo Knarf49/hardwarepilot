@@ -31,17 +31,21 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 1 — Project CRUD + Form Input
 
-**Status:** In Progress (60%)
+**Status:** In Progress (70%)
 
 ## Tasks
 
 - [x] Monorepo scaffold (Turborepo, `apps/web`, `apps/compute`, `packages`)
 - [x] Next.js 16 + Prisma v7 + PostgreSQL setup (Docker)
 - [x] Project model + Prisma schema + migrations
-- [ ] Project list + create + detail pages
+- [x] Project list + create + detail pages
+  - shadcn/ui installed (button, input, card, label, dialog)
+  - Workspace CRUD: list (/), create dialog, navigation
+  - Project CRUD: list (/workspace/[id]), create dialog, detail (/projects/[id])
+  - Server components for reads, server actions (Zod) for mutations
 - [~] Form input: draw outline / upload sketch / describe shape
   - Data format: polygon points + curve hint metadata (JSONB), see architecture.md Form properties
-  - Complete DB schema finalized (11 tables): Workspace, Project, Form, Module, Component, Net, ModuleConnection, Constraint, Decision, AIProposal, Artifact — see architecture.md Database Schema
+  - Complete DB schema finalized (11 tables) and pushed to PostgreSQL
 
 ## Relevant Context
 
