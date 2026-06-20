@@ -1,6 +1,6 @@
 "use client";
 
-import { Battery, Cpu, Gauge, HardDrive, Radio, Rows3, Tablet, Usb, Zap } from "lucide-react";
+import { Battery, Cpu, Gauge, HardDrive, Radio, Rows3, Tablet, Zap } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { createModuleFromTemplate } from "@/actions/module";
@@ -65,6 +65,33 @@ const templates: (ModuleTemplate & { index: number })[] = [
   },
 ];
 
+function SubmitButton({ template }: { template: ModuleTemplate }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="flex items-center gap-3 p-3 rounded-lg border border-neutral-800 bg-neutral-900 hover:border-[#7C5CFC]/40 hover:bg-neutral-800/50 transition-all text-left w-full group disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <div className="w-9 h-9 rounded-lg bg-[#7C5CFC]/10 flex items-center justify-center shrink-0">
+        <template.icon className="w-4 h-4 text-[#7C5CFC]" />
+      </div>
+      <div className="min-w-0">
+        <div className="text-sm font-medium text-neutral-200 group-hover:text-neutral-100">
+          {template.name}
+        </div>
+        <div className="text-xs text-neutral-500 truncate">{template.description}</div>
+      </div>
+      {pending ? (
+        <span className="ml-auto text-xs text-[#7C5CFC] animate-pulse">Adding...</span>
+      ) : (
+        <Zap className="w-3 h-3 text-neutral-700 group-hover:text-[#7C5CFC] ml-auto shrink-0 transition-colors" />
+      )}
+    </button>
+  );
+}
+
 function TemplateButton({
   template,
   projectId,
@@ -73,30 +100,12 @@ function TemplateButton({
   projectId: string;
 }) {
   const [, formAction] = useActionState(createModuleFromTemplate, null);
-  const { pending } = useFormStatus();
-
-  if (pending) return null;
 
   return (
     <form action={formAction}>
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="templateIndex" value={template.index} />
-      <button
-        type="submit"
-        disabled={pending}
-        className="flex items-center gap-3 p-3 rounded-lg border border-neutral-800 bg-neutral-900 hover:border-[#7C5CFC]/40 hover:bg-neutral-800/50 transition-all text-left w-full group"
-      >
-        <div className="w-9 h-9 rounded-lg bg-[#7C5CFC]/10 flex items-center justify-center shrink-0">
-          <template.icon className="w-4 h-4 text-[#7C5CFC]" />
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-medium text-neutral-200 group-hover:text-neutral-100">
-            {template.name}
-          </div>
-          <div className="text-xs text-neutral-500 truncate">{template.description}</div>
-        </div>
-        <Usb className="w-3 h-3 text-neutral-700 group-hover:text-[#7C5CFC] ml-auto shrink-0 transition-colors" />
-      </button>
+      <SubmitButton template={template} />
     </form>
   );
 }
