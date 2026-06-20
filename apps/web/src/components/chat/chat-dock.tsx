@@ -198,7 +198,6 @@ function ChatMessages({
             {msg.parts?.map((part, i) => {
               if (
                 part.type === "step-start" ||
-                part.type === "step-finish" ||
                 part.type === "tool-invocation" ||
                 part.type?.startsWith("reasoning")
               ) {
