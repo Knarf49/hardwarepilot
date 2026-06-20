@@ -77,16 +77,20 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 2 — Hardware Context Engine + Module Graph + Schematic
 
-**Status:** Not Started (0%)
+**Status:** In Progress (25%)
 
 ## Tasks
 
-- [ ] Module, Component, Net, Constraint, Decision Prisma models (graph nodes + edges)
-- [ ] Component schema: type (R, C, L, diode, transistor, IC, connector, source), value, tolerance, part number, footprint, pin definitions
-- [ ] Net schema: connections between component pins (within module) and module ports (across modules)
-- [ ] React Flow module graph canvas (module-level view)
+- [x] Module, Component, Net, Constraint, Decision Prisma models (graph nodes + edges)
+- [x] Component schema: type (R, C, L, diode, transistor, IC, connector, source), value, tolerance, part number, footprint, pin definitions
+- [x] Net schema: connections between component pins (within module) and module ports (across modules)
+- [x] Module CRUD UI (add, move, edit modules)
+  - `/projects/[projectId]/modules` — module list + React Flow graph canvas
+  - CreateModuleDialog: name, type, ports (JSON), description
+  - ModuleCard: display name, type, ports with direction, delete action
+  - ModuleGraphCanvas: React Flow nodes, background grid, controls, minimap
+- [ ] React Flow module graph canvas (module-level view) — drag to position, edge connections
 - [ ] Component-level schematic canvas within each module (add components, wire pins)
-- [ ] Module CRUD UI (add, move, edit modules)
 - [ ] Constraint definition UI (mechanical + electrical)
 - [ ] Decision log panel
 
