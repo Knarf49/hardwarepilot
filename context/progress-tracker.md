@@ -130,6 +130,15 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - architecture.md — AI Layer (Intent, Module, Constraint, Circuit agents), Constraint Negotiation Engine
 - ai-workflow-rules.md — Rule 3 (explain decisions), Rule 5 (risk tiers), Rule 8 (specialized agents)
 
+## Notes
+
+- Chat route migrated LangChain → AI SDK 6 native tool calling (`streamText` + `tool()` + `convertToModelMessages` + `toUIMessageStreamResponse`). Dropped `@langchain/core`, `@langchain/openai`, `langchain` deps (-24 pkgs). Eliminated XML regex tag hack that caused `<getProjectState>` leak in user-facing responses.
+- 5 chat tools verified end-to-end against real DB + real project UUID: `getProjectState`, `createModule`, `createComponent`, `addConstraint`, `generateNetlist`.
+- `ChatDock` reads `projectId` from URL via `usePathname` (`/projects/<uuid>/...` regex extract) — root layout renders one dock, project context auto-detected.
+- Fix: `stopWhen: stepCountIs(5)` on `streamText` — AI SDK 6 default `stepCountIs(1)` stopped loop after tool call, no text summary step, empty assistant bubble.
+- Fix: `justLoadedRef` guard in ChatDock save effect — `setMessages(loadedMsgs)` triggered re-save of loaded assistant messages → duplicate rows in DB. Cleaned 12 existing dup rows via throwaway script.
+- `DATABASE_URL` documented in `AGENTS.md`: lives in `apps/web/.env.local` (dev) + hardcoded in `apps/web/vitest.config.ts` `test.env` (Vitest doesn't load `.env.local`). Update both if DB port/password changes.
+
 ---
 
 # Phase 4 — AI Enclosure Generator + 3D
