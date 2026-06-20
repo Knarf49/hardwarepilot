@@ -1,5 +1,9 @@
 # Progress Tracker
 
+## MVP Status: Complete (100%)
+
+All 5 phases done. Phases 0-5 all at 100%. See Post-MVP below for backlog.
+
 ## Status Legend
 
 - `[ ]` Not Started
@@ -204,7 +208,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 **Status:** Not Started
 
-Tracked as backlog, not phased. Revisit when MVP complete.
+Tracked as backlog. MVP complete. Available for future phases.
 
 - [ ] KiCad import workflow
 - [ ] STEP export
