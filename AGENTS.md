@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 0 (Foundation & Context) Done. Phase 1 (Monorepo Scaffold + Project CRUD) In Progress (40%).
+Phase 0 (Foundation & Context) Done. Phase 1 (Project CRUD + Form Input) Done. Phase 2 (Hardware Context Engine + Module Graph + Schematic) Done. Phase 3 (AI Assistant + Constraint Negotiation + Circuit Simulation) In Progress (50%). See `context/progress-tracker.md` for task-level detail.
 
 ## Context Docs (read before building)
 
@@ -60,9 +60,23 @@ hardwarepilot/
 
 ## Local Dev Commands
 
+**IMPORTANT: Never kill/restart the dev server (`pnpm dev`) without asking the user first. Tell the user when a restart is needed and let them do it.**
+
 ```sh
 # Start database + pgAdmin (Docker required, PostgreSQL on :54322, pgAdmin on :5050)
 docker compose up -d
+
+### Database URL
+
+`DATABASE_URL` lives in `apps/web/.env.local` (gitignored). Dev value:
+
+```
+DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+```
+
+- `pnpm dev` (Next.js) loads it automatically from `.env.local`.
+- Vitest does NOT load `.env.local`. It's hardcoded in `apps/web/vitest.config.ts` `test.env.DATABASE_URL`. If DB port/password changes, update **both** `.env.local` and `vitest.config.ts`.
+- Any test touching Prisma needs this env set or it fails with `SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string`.
 
 # Start Next.js dev server
 pnpm dev
