@@ -58,3 +58,29 @@ export async function DELETE(request: Request) {
     return Response.json({ error: "Failed to delete thread" }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const parsed = z
+    .object({ threadId: z.string(), title: z.string().min(1).max(200) })
+    .safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: parsed.error.message }, { status: 400 });
+  }
+
+  try {
+    const thread = await db.thread.update({
+      where: { id: parsed.data.threadId },
+      data: { title: parsed.data.title },
+    });
+    return Response.json({ id: thread.id, title: thread.title });
+  } catch {
+    return Response.json({ error: "Failed to update title" }, { status: 500 });
+  }
+}

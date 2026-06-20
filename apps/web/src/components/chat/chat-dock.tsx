@@ -29,11 +29,21 @@ async function loadMsgs(threadId: string) {
 export function ChatDock({ projectId }: { projectId?: string }) {
   const { isOpen, activeThreadId, toggle, close, setActiveThreadId } = useChatStore();
   const [refreshKey, setRefreshKey] = useState(0);
+  const titleSetRef = useRef(new Set<string>());
 
   const handleSend = useCallback(
     (text: string) => {
       if (!activeThreadId) return;
       saveMsg(activeThreadId, "user", [{ type: "text", text }]);
+      if (!titleSetRef.current.has(activeThreadId)) {
+        titleSetRef.current.add(activeThreadId);
+        const title = text.length > 60 ? `${text.slice(0, 57)}...` : text;
+        fetch("/api/threads", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ threadId: activeThreadId, title }),
+        }).then(() => setRefreshKey((k) => k + 1));
+      }
     },
     [activeThreadId],
   );
