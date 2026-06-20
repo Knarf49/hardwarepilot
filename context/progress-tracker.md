@@ -60,6 +60,8 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - PostgreSQL 17 Alpine via Docker Compose (port 54322) with pgAdmin UI (port 5050)
 - Prisma v7 (ESM) with `@prisma/adapter-pg` driver adapter, client generated to `prisma/generated/`
 - Prisma schema: 11 models (Workspace, Project, Form, Module, Component, Net, ModuleConnection, Constraint, Decision, AIProposal, Artifact) — pushed to DB, client regenerated
+- AI agents defined in `packages/agents/`: Intent (pro), Module (flash), Constraint (pro), Circuit (pro), Review (flash) — AI SDK 6 ToolLoopAgent + Zod schemas
+- OpenCode Go provider via @ai-sdk/openai-compatible: deepseek-v4-pro + deepseek-v4-flash
 - Python compute service (`apps/compute/src/app/main.py`) with Dockerfile, uv package manager
 - `docker-compose.yml` manages PostgreSQL + pgAdmin + compute service
 

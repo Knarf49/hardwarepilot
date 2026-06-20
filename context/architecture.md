@@ -818,7 +818,12 @@ File Storage:
 - User uploads
 
 AI:
-- OpenAI APIs
+- AI SDK 6 (ToolLoopAgent)
+- OpenCode Go provider via @ai-sdk/openai-compatible
+  - Base URL: https://opencode.ai/zen/go/v1
+  - Pro model: deepseek-v4-pro (Intent, Constraint, Circuit agents)
+  - Flash model: deepseek-v4-flash (Module, Review agents)
+  - API key: OPENCODE_API_KEY
 
 Simulation:
 - ngspice / PySpice (runs in apps/compute)
