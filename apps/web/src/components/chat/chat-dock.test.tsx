@@ -11,7 +11,7 @@ vi.mock("@ai-sdk/react", () => ({
 }));
 
 vi.mock("ai", () => ({
-  TextStreamChatTransport: vi.fn(),
+  DefaultChatTransport: vi.fn(),
 }));
 
 vi.mock("react-markdown", () => ({

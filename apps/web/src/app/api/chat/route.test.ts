@@ -9,8 +9,8 @@ vi.mock("ai", async () => {
   return {
     ...actual,
     streamText: vi.fn().mockReturnValue({
-      toTextStreamResponse: () =>
-        new Response("data: Hello\n\ndata: [DONE]\n", {
+      pipeUIMessageStreamToResponse: () =>
+        new Response('data: {"type":"text","text":"Hello"}\n\ndata: [DONE]\n', {
           headers: { "content-type": "text/plain" },
         }),
     }),

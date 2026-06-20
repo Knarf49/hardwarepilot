@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
-import { TextStreamChatTransport } from "ai";
+import { DefaultChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -128,7 +128,7 @@ function ChatMessages({
 
   const transport = useMemo(
     () =>
-      new TextStreamChatTransport({
+      new DefaultChatTransport({
         api: "/api/chat",
         body: projectId ? { projectId } : undefined,
       }),

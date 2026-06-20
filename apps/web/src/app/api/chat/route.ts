@@ -54,5 +54,5 @@ export async function POST(request: Request) {
     maxSteps: 10,
   });
 
-  return result.toTextStreamResponse();
+  return result.pipeUIMessageStreamToResponse({});
 }
