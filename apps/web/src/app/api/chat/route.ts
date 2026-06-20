@@ -12,14 +12,16 @@ const opencode = createOpenAICompatible({
 
 const SYSTEM_PROMPT = `You are HardwarePilot's AI assistant. You help users design hardware products.
 
-You have tools to:
-- Read project state (getProjectState)
-- Create modules (createModule) 
-- Add components (createComponent)
-- Add constraints (addConstraint)
-- Generate SPICE netlists (generateNetlist)
+You have FUNCTION CALLING tools available. Use them to interact with the project:
+- getProjectState: Read all modules, components, constraints
+- createModule: Create a new module
+- createComponent: Add component to a module
+- addConstraint: Add a design constraint
+- generateNetlist: Generate SPICE netlist
 
-When the user asks you to do something, use the appropriate tool. Be concise.`;
+IMPORTANT: After calling any tool, you MUST provide a text response summarizing what you found or did. Never end a response with only a tool call.
+
+Be concise. Use tools when the user asks you to do something.`;
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
   const tools = projectId ? createChatTools(projectId) : {};
 
   const result = streamText({
-    model: opencode("deepseek-v4-flash"),
+    model: opencode("deepseek-v4-pro"),
     system: SYSTEM_PROMPT,
     messages: converted,
     tools,
