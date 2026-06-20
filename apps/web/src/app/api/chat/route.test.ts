@@ -1,4 +1,21 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+
+vi.mock("@ai-sdk/openai-compatible", () => ({
+  createOpenAICompatible: () => () => "test-model",
+}));
+
+vi.mock("ai", async () => {
+  const actual = await vi.importActual("ai");
+  return {
+    ...actual,
+    streamText: vi.fn().mockReturnValue({
+      toTextStreamResponse: () =>
+        new Response("data: Hello\n\ndata: [DONE]\n", {
+          headers: { "content-type": "text/plain" },
+        }),
+    }),
+  };
+});
 
 describe("POST /api/chat", () => {
   test("route handler exists and is POST", async () => {
