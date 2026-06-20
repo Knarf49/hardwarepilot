@@ -31,7 +31,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 1 — Project CRUD + Form Input
 
-**Status:** In Progress (70%)
+**Status:** Done (100%)
 
 ## Tasks
 
@@ -43,9 +43,17 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
   - Workspace CRUD: list (/), create dialog, navigation
   - Project CRUD: list (/workspace/[id]), create dialog, detail (/projects/[id])
   - Server components for reads, server actions (Zod) for mutations
-- [~] Form input: draw outline / upload sketch / describe shape
+- [x] Form input: draw outline / upload sketch / describe shape
+  - `/projects/[projectId]/form` — 3-tab workspace (Draw / Upload / Describe)
+  - SVG polygon drawing canvas: click to add vertices, drag to move, close shape
+  - Dimension inputs (W, H, D in mm)
+  - Sketch upload placeholder (image preview, AI processing TBD)
+  - Shape description textarea (Intent Agent integration TBD)
+  - Server actions: createForm, updateForm with Zod validation
   - Data format: polygon points + curve hint metadata (JSONB), see architecture.md Form properties
   - Complete DB schema finalized (11 tables) and pushed to PostgreSQL
+- [x] AI agents: OpenCode Go provider via @ai-sdk/openai-compatible (deepseek-v4-pro + flash)
+- [x] AI SDK 6 agent skeletons (Intent, Module, Constraint, Circuit, Review) in packages/agents
 
 ## Relevant Context
 
