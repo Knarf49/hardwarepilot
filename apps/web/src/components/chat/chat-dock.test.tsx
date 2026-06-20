@@ -14,6 +14,13 @@ vi.mock("ai", () => ({
   TextStreamChatTransport: vi.fn(),
 }));
 
+vi.mock("@/actions/chat", () => ({
+  getThreads: async () => ({ data: [], error: null }),
+  loadMessages: async () => ({ data: [], error: null }),
+  saveMessage: vi.fn(),
+  createThread: vi.fn(),
+}));
+
 describe("ChatDock", () => {
   test("renders toggle button when closed", () => {
     render(<ChatDock />);

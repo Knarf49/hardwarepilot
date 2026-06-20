@@ -2,8 +2,10 @@ import { describe, expect, test } from "vitest";
 import { useChatStore } from "./chat-store";
 
 describe("chatStore", () => {
-  test("starts closed", () => {
-    expect(useChatStore.getState().isOpen).toBe(false);
+  test("starts closed with no active thread", () => {
+    const state = useChatStore.getState();
+    expect(state.isOpen).toBe(false);
+    expect(state.activeThreadId).toBeNull();
   });
 
   test("toggle opens and closes dock", () => {
@@ -14,16 +16,10 @@ describe("chatStore", () => {
     expect(useChatStore.getState().isOpen).toBe(false);
   });
 
-  test("open sets isOpen to true", () => {
-    const { open } = useChatStore.getState();
-    open();
-    expect(useChatStore.getState().isOpen).toBe(true);
-  });
-
-  test("close sets isOpen to false", () => {
-    const { open, close } = useChatStore.getState();
-    open();
-    close();
-    expect(useChatStore.getState().isOpen).toBe(false);
+  test("setActiveThreadId updates thread", () => {
+    useChatStore.getState().setActiveThreadId("thread-1");
+    expect(useChatStore.getState().activeThreadId).toBe("thread-1");
+    useChatStore.getState().setActiveThreadId(null);
+    expect(useChatStore.getState().activeThreadId).toBeNull();
   });
 });

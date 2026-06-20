@@ -33,6 +33,7 @@ model Project {
   aiProposals      AIProposal[]
   artifacts        Artifact[]
   nets             Net[]
+  threads          Thread[]
 }
 
 model Form {
@@ -187,4 +188,25 @@ model Artifact {
   project Project  @relation(fields: [projectId], references: [id])
   form    Form?    @relation(fields: [formId], references: [id])
   module  Module?  @relation("ModuleArtifact", fields: [moduleId], references: [id])
+}
+
+model Thread {
+  id        String        @id @default(uuid())
+  projectId String?
+  title     String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  project  Project?      @relation(fields: [projectId], references: [id])
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  threadId  String
+  role      String
+  parts     Json
+  createdAt DateTime @default(now())
+
+  thread Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
 }

@@ -96,3 +96,13 @@ export type AIProposal = Prisma.AIProposalModel
  * 
  */
 export type Artifact = Prisma.ArtifactModel
+/**
+ * Model Thread
+ * 
+ */
+export type Thread = Prisma.ThreadModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel

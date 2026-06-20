@@ -199,6 +199,7 @@ export type ProjectWhereInput = {
   aiProposals?: Prisma.AIProposalListRelationFilter
   artifacts?: Prisma.ArtifactListRelationFilter
   nets?: Prisma.NetListRelationFilter
+  threads?: Prisma.ThreadListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -217,6 +218,7 @@ export type ProjectOrderByWithRelationInput = {
   aiProposals?: Prisma.AIProposalOrderByRelationAggregateInput
   artifacts?: Prisma.ArtifactOrderByRelationAggregateInput
   nets?: Prisma.NetOrderByRelationAggregateInput
+  threads?: Prisma.ThreadOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -238,6 +240,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   aiProposals?: Prisma.AIProposalListRelationFilter
   artifacts?: Prisma.ArtifactListRelationFilter
   nets?: Prisma.NetListRelationFilter
+  threads?: Prisma.ThreadListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -279,6 +282,7 @@ export type ProjectCreateInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -296,6 +300,7 @@ export type ProjectUncheckedCreateInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -313,6 +318,7 @@ export type ProjectUpdateInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -330,6 +336,7 @@ export type ProjectUncheckedUpdateInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -398,6 +405,11 @@ export type ProjectMinOrderByAggregateInput = {
 export type ProjectScalarRelationFilter = {
   is?: Prisma.ProjectWhereInput
   isNot?: Prisma.ProjectWhereInput
+}
+
+export type ProjectNullableScalarRelationFilter = {
+  is?: Prisma.ProjectWhereInput | null
+  isNot?: Prisma.ProjectWhereInput | null
 }
 
 export type ProjectCreateNestedManyWithoutWorkspaceInput = {
@@ -558,6 +570,22 @@ export type ProjectUpdateOneRequiredWithoutArtifactsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutArtifactsInput, Prisma.ProjectUpdateWithoutArtifactsInput>, Prisma.ProjectUncheckedUpdateWithoutArtifactsInput>
 }
 
+export type ProjectCreateNestedOneWithoutThreadsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutThreadsInput, Prisma.ProjectUncheckedCreateWithoutThreadsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutThreadsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneWithoutThreadsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutThreadsInput, Prisma.ProjectUncheckedCreateWithoutThreadsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutThreadsInput
+  upsert?: Prisma.ProjectUpsertWithoutThreadsInput
+  disconnect?: Prisma.ProjectWhereInput | boolean
+  delete?: Prisma.ProjectWhereInput | boolean
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutThreadsInput, Prisma.ProjectUpdateWithoutThreadsInput>, Prisma.ProjectUncheckedUpdateWithoutThreadsInput>
+}
+
 export type ProjectCreateWithoutWorkspaceInput = {
   id?: string
   name: string
@@ -572,6 +600,7 @@ export type ProjectCreateWithoutWorkspaceInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorkspaceInput = {
@@ -588,6 +617,7 @@ export type ProjectUncheckedCreateWithoutWorkspaceInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorkspaceInput = {
@@ -642,6 +672,7 @@ export type ProjectCreateWithoutFormsInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFormsInput = {
@@ -658,6 +689,7 @@ export type ProjectUncheckedCreateWithoutFormsInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFormsInput = {
@@ -690,6 +722,7 @@ export type ProjectUpdateWithoutFormsInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFormsInput = {
@@ -706,6 +739,7 @@ export type ProjectUncheckedUpdateWithoutFormsInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutModulesInput = {
@@ -722,6 +756,7 @@ export type ProjectCreateWithoutModulesInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutModulesInput = {
@@ -738,6 +773,7 @@ export type ProjectUncheckedCreateWithoutModulesInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutModulesInput = {
@@ -770,6 +806,7 @@ export type ProjectUpdateWithoutModulesInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutModulesInput = {
@@ -786,6 +823,7 @@ export type ProjectUncheckedUpdateWithoutModulesInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutNetsInput = {
@@ -802,6 +840,7 @@ export type ProjectCreateWithoutNetsInput = {
   decisions?: Prisma.DecisionCreateNestedManyWithoutProjectInput
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutNetsInput = {
@@ -818,6 +857,7 @@ export type ProjectUncheckedCreateWithoutNetsInput = {
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutProjectInput
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutNetsInput = {
@@ -850,6 +890,7 @@ export type ProjectUpdateWithoutNetsInput = {
   decisions?: Prisma.DecisionUpdateManyWithoutProjectNestedInput
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutNetsInput = {
@@ -866,6 +907,7 @@ export type ProjectUncheckedUpdateWithoutNetsInput = {
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutProjectNestedInput
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutModuleConnectionsInput = {
@@ -882,6 +924,7 @@ export type ProjectCreateWithoutModuleConnectionsInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutModuleConnectionsInput = {
@@ -898,6 +941,7 @@ export type ProjectUncheckedCreateWithoutModuleConnectionsInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutModuleConnectionsInput = {
@@ -930,6 +974,7 @@ export type ProjectUpdateWithoutModuleConnectionsInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutModuleConnectionsInput = {
@@ -946,6 +991,7 @@ export type ProjectUncheckedUpdateWithoutModuleConnectionsInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutConstraintsInput = {
@@ -962,6 +1008,7 @@ export type ProjectCreateWithoutConstraintsInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutConstraintsInput = {
@@ -978,6 +1025,7 @@ export type ProjectUncheckedCreateWithoutConstraintsInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutConstraintsInput = {
@@ -1010,6 +1058,7 @@ export type ProjectUpdateWithoutConstraintsInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutConstraintsInput = {
@@ -1026,6 +1075,7 @@ export type ProjectUncheckedUpdateWithoutConstraintsInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDecisionsInput = {
@@ -1042,6 +1092,7 @@ export type ProjectCreateWithoutDecisionsInput = {
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDecisionsInput = {
@@ -1058,6 +1109,7 @@ export type ProjectUncheckedCreateWithoutDecisionsInput = {
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDecisionsInput = {
@@ -1090,6 +1142,7 @@ export type ProjectUpdateWithoutDecisionsInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDecisionsInput = {
@@ -1106,6 +1159,7 @@ export type ProjectUncheckedUpdateWithoutDecisionsInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutAiProposalsInput = {
@@ -1122,6 +1176,7 @@ export type ProjectCreateWithoutAiProposalsInput = {
   decisions?: Prisma.DecisionCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutAiProposalsInput = {
@@ -1138,6 +1193,7 @@ export type ProjectUncheckedCreateWithoutAiProposalsInput = {
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutProjectInput
   artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutAiProposalsInput = {
@@ -1170,6 +1226,7 @@ export type ProjectUpdateWithoutAiProposalsInput = {
   decisions?: Prisma.DecisionUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutAiProposalsInput = {
@@ -1186,6 +1243,7 @@ export type ProjectUncheckedUpdateWithoutAiProposalsInput = {
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutArtifactsInput = {
@@ -1202,6 +1260,7 @@ export type ProjectCreateWithoutArtifactsInput = {
   decisions?: Prisma.DecisionCreateNestedManyWithoutProjectInput
   aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutArtifactsInput = {
@@ -1218,6 +1277,7 @@ export type ProjectUncheckedCreateWithoutArtifactsInput = {
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutProjectInput
   aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
   nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+  threads?: Prisma.ThreadUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutArtifactsInput = {
@@ -1250,6 +1310,7 @@ export type ProjectUpdateWithoutArtifactsInput = {
   decisions?: Prisma.DecisionUpdateManyWithoutProjectNestedInput
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutArtifactsInput = {
@@ -1265,6 +1326,91 @@ export type ProjectUncheckedUpdateWithoutArtifactsInput = {
   constraints?: Prisma.ConstraintUncheckedUpdateManyWithoutProjectNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutProjectNestedInput
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
+  nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutThreadsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutProjectsInput
+  forms?: Prisma.FormCreateNestedManyWithoutProjectInput
+  modules?: Prisma.ModuleCreateNestedManyWithoutProjectInput
+  moduleConnections?: Prisma.ModuleConnectionCreateNestedManyWithoutProjectInput
+  constraints?: Prisma.ConstraintCreateNestedManyWithoutProjectInput
+  decisions?: Prisma.DecisionCreateNestedManyWithoutProjectInput
+  aiProposals?: Prisma.AIProposalCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ArtifactCreateNestedManyWithoutProjectInput
+  nets?: Prisma.NetCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutThreadsInput = {
+  id?: string
+  workspaceId: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProjectInput
+  modules?: Prisma.ModuleUncheckedCreateNestedManyWithoutProjectInput
+  moduleConnections?: Prisma.ModuleConnectionUncheckedCreateNestedManyWithoutProjectInput
+  constraints?: Prisma.ConstraintUncheckedCreateNestedManyWithoutProjectInput
+  decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutProjectInput
+  aiProposals?: Prisma.AIProposalUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ArtifactUncheckedCreateNestedManyWithoutProjectInput
+  nets?: Prisma.NetUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutThreadsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutThreadsInput, Prisma.ProjectUncheckedCreateWithoutThreadsInput>
+}
+
+export type ProjectUpsertWithoutThreadsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutThreadsInput, Prisma.ProjectUncheckedUpdateWithoutThreadsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutThreadsInput, Prisma.ProjectUncheckedCreateWithoutThreadsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutThreadsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutThreadsInput, Prisma.ProjectUncheckedUpdateWithoutThreadsInput>
+}
+
+export type ProjectUpdateWithoutThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProjectNestedInput
+  modules?: Prisma.ModuleUpdateManyWithoutProjectNestedInput
+  moduleConnections?: Prisma.ModuleConnectionUpdateManyWithoutProjectNestedInput
+  constraints?: Prisma.ConstraintUpdateManyWithoutProjectNestedInput
+  decisions?: Prisma.DecisionUpdateManyWithoutProjectNestedInput
+  aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
+  nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProjectNestedInput
+  modules?: Prisma.ModuleUncheckedUpdateManyWithoutProjectNestedInput
+  moduleConnections?: Prisma.ModuleConnectionUncheckedUpdateManyWithoutProjectNestedInput
+  constraints?: Prisma.ConstraintUncheckedUpdateManyWithoutProjectNestedInput
+  decisions?: Prisma.DecisionUncheckedUpdateManyWithoutProjectNestedInput
+  aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
@@ -1290,6 +1436,7 @@ export type ProjectUpdateWithoutWorkspaceInput = {
   aiProposals?: Prisma.AIProposalUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
@@ -1306,6 +1453,7 @@ export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
   aiProposals?: Prisma.AIProposalUncheckedUpdateManyWithoutProjectNestedInput
   artifacts?: Prisma.ArtifactUncheckedUpdateManyWithoutProjectNestedInput
   nets?: Prisma.NetUncheckedUpdateManyWithoutProjectNestedInput
+  threads?: Prisma.ThreadUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1330,6 +1478,7 @@ export type ProjectCountOutputType = {
   aiProposals: number
   artifacts: number
   nets: number
+  threads: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1341,6 +1490,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   aiProposals?: boolean | ProjectCountOutputTypeCountAiProposalsArgs
   artifacts?: boolean | ProjectCountOutputTypeCountArtifactsArgs
   nets?: boolean | ProjectCountOutputTypeCountNetsArgs
+  threads?: boolean | ProjectCountOutputTypeCountThreadsArgs
 }
 
 /**
@@ -1409,6 +1559,13 @@ export type ProjectCountOutputTypeCountNetsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.NetWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountThreadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ThreadWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1426,6 +1583,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   aiProposals?: boolean | Prisma.Project$aiProposalsArgs<ExtArgs>
   artifacts?: boolean | Prisma.Project$artifactsArgs<ExtArgs>
   nets?: boolean | Prisma.Project$netsArgs<ExtArgs>
+  threads?: boolean | Prisma.Project$threadsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1469,6 +1627,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   aiProposals?: boolean | Prisma.Project$aiProposalsArgs<ExtArgs>
   artifacts?: boolean | Prisma.Project$artifactsArgs<ExtArgs>
   nets?: boolean | Prisma.Project$netsArgs<ExtArgs>
+  threads?: boolean | Prisma.Project$threadsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1490,6 +1649,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     aiProposals: Prisma.$AIProposalPayload<ExtArgs>[]
     artifacts: Prisma.$ArtifactPayload<ExtArgs>[]
     nets: Prisma.$NetPayload<ExtArgs>[]
+    threads: Prisma.$ThreadPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1901,6 +2061,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   aiProposals<T extends Prisma.Project$aiProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$aiProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AIProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   artifacts<T extends Prisma.Project$artifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nets<T extends Prisma.Project$netsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$netsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  threads<T extends Prisma.Project$threadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2526,6 +2687,30 @@ export type Project$netsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.NetScalarFieldEnum | Prisma.NetScalarFieldEnum[]
+}
+
+/**
+ * Project.threads
+ */
+export type Project$threadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Thread
+   */
+  select?: Prisma.ThreadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Thread
+   */
+  omit?: Prisma.ThreadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ThreadInclude<ExtArgs> | null
+  where?: Prisma.ThreadWhereInput
+  orderBy?: Prisma.ThreadOrderByWithRelationInput | Prisma.ThreadOrderByWithRelationInput[]
+  cursor?: Prisma.ThreadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ThreadScalarFieldEnum | Prisma.ThreadScalarFieldEnum[]
 }
 
 /**

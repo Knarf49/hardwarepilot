@@ -281,6 +281,8 @@ Users can ask:
 - Which architecture is best for this shape?
 - Are there manufacturing risks?
 
+**Chat Persistence**: Conversations organized into **Threads** (one per topic/project), persisted to PostgreSQL (`Thread` + `ChatMessage` models). Messages saved as `Json` (UIMessageParts format). Thread selector in chat dock allows switching between conversations. Messages survive page refreshes and navigation. Global threads (null projectId) and project-scoped threads supported.
+
 ---
 
 ### AI Enclosure Generator

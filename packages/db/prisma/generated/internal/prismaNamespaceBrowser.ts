@@ -61,7 +61,9 @@ export const ModelName = {
   Constraint: 'Constraint',
   Decision: 'Decision',
   AIProposal: 'AIProposal',
-  Artifact: 'Artifact'
+  Artifact: 'Artifact',
+  Thread: 'Thread',
+  ChatMessage: 'ChatMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -248,6 +250,28 @@ export const ArtifactScalarFieldEnum = {
 } as const
 
 export type ArtifactScalarFieldEnum = (typeof ArtifactScalarFieldEnum)[keyof typeof ArtifactScalarFieldEnum]
+
+
+export const ThreadScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThreadScalarFieldEnum = (typeof ThreadScalarFieldEnum)[keyof typeof ThreadScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  role: 'role',
+  parts: 'parts',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
 export const SortOrder = {
