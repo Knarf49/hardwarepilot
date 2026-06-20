@@ -176,7 +176,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
             className="bg-neutral-950"
           >
             <Background color="#262626" gap={20} />
-            <Controls className="bg-neutral-900 border-neutral-800 fill-neutral-400" />
+            <Controls className="bg-neutral-900 border-neutral-800 [&_button]:text-black [&_svg]:fill-black" />
             <MiniMap
               nodeColor="#7C5CFC"
               maskColor="rgba(0,0,0,0.7)"
