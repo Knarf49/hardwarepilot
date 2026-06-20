@@ -44,7 +44,7 @@ interface ModuleGraphCanvasProps {
 
 function ModuleNode({ data }: NodeProps) {
   return (
-    <div className="px-3 py-2 min-w-[120px]">
+    <div className="px-3 py-2 min-w-[120px] cursor-pointer">
       <div className="font-medium text-neutral-100 text-sm">{data.name as string}</div>
       <div className="text-xs text-neutral-500 capitalize">{data.type as string}</div>
     </div>
@@ -153,7 +153,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
   return (
     <div
       ref={containerRef}
-      className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden"
+      className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden [&_.react-flow__pane]:cursor-auto"
     >
       <ContextMenu open={contextOpen} onOpenChange={setContextOpen}>
         <ContextMenuTrigger className="w-full h-full p-0 border-0">
