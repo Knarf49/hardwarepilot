@@ -109,7 +109,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** In Progress (20%)
+**Status:** In Progress (30%)
 
 ## Tasks
 
@@ -117,7 +117,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - [ ] ngspice / PySpice integration in `apps/compute`
 - [ ] SPICE netlist generation from component + net graph
 - [ ] Simulation gRPC service (submit job, stream progress, return results)
-- [ ] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent, Circuit Agent
+- [x] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent, Circuit Agent
 - [ ] Constraint negotiation engine (Python) — mechanical + electrical
 - [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
 - [x] AI chat dock (free-form questions)

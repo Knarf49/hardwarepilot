@@ -1,23 +1,29 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/stores/chat-store";
 
 export function ChatDock() {
-  const { isOpen, messages, toggle, addMessage, clear } = useChatStore();
+  const { isOpen, toggle, close } = useChatStore();
   const [input, setInput] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
+
+  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
+
+  const { messages, sendMessage, status } = useChat({ transport });
 
   const handleSend = useCallback(() => {
     const trimmed = input.trim();
     if (!trimmed) return;
-    addMessage({ role: "user", content: trimmed });
+    sendMessage({ text: trimmed });
     setInput("");
-  }, [input, addMessage]);
+  }, [input, sendMessage]);
 
   return (
     <>
@@ -40,7 +46,7 @@ export function ChatDock() {
             <h2 className="font-semibold text-sm text-neutral-200">AI Assistant</h2>
             <button
               type="button"
-              onClick={clear}
+              onClick={close}
               aria-label="Close AI assistant"
               className="rounded-md p-1 text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800"
             >
@@ -64,9 +70,20 @@ export function ChatDock() {
                     : "mr-auto bg-neutral-800 text-neutral-100",
                 )}
               >
-                {msg.content}
+                {msg.parts?.map((part, i) => {
+                  if (part.type === "text") {
+                    // biome-ignore lint/suspicious/noArrayIndexKey: parts are immutable content fragments, order stable
+                    return <span key={`${msg.id}-${i}`}>{part.text}</span>;
+                  }
+                  return null;
+                })}
               </div>
             ))}
+            {(status === "submitted" || status === "streaming") && (
+              <div className="mr-auto bg-neutral-800 rounded-lg px-3 py-2 text-sm text-neutral-400">
+                Thinking...
+              </div>
+            )}
           </div>
 
           <form
@@ -82,7 +99,11 @@ export function ChatDock() {
               placeholder="Ask about your design..."
               className="flex-1"
             />
-            <Button type="submit" size="sm" disabled={!input.trim()}>
+            <Button
+              type="submit"
+              size="sm"
+              disabled={!input.trim() || status === "submitted" || status === "streaming"}
+            >
               <Send className="size-4" />
             </Button>
           </form>

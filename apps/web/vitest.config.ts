@@ -6,6 +6,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./test-setup.ts"],
+    env: {
+      OPENCODE_API_KEY: "test-key",
+    },
   },
   resolve: {
     alias: {
