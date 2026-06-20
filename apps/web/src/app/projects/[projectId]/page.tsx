@@ -1,5 +1,5 @@
 import { db } from "@hardwarepilot/db";
-import { ArrowRight, Box, Cpu, FileText, Gavel, ListChecks } from "lucide-react";
+import { Activity, ArrowRight, Box, Cpu, FileText, Gavel, ListChecks } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getForm } from "@/lib/services/form";
@@ -54,6 +54,12 @@ export default async function ProjectDetailPage({
         constraints.length > 0
           ? `${constraints.length} rule${constraints.length > 1 ? "s" : ""} defined`
           : "Define design rules",
+    },
+    {
+      href: `/projects/${projectId}/simulation`,
+      icon: Activity,
+      title: "Simulation",
+      subtitle: "DC operating point analysis & SPICE netlist",
     },
   ];
 

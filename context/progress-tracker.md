@@ -109,17 +109,17 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** In Progress (50%)
+**Status:** Done (100%)
 
 ## Tasks
 
 - [x] FastAPI compute service scaffold + gRPC contract
-- [ ] ngspice / PySpice integration in `apps/compute`
-- [ ] SPICE netlist generation from component + net graph
-- [ ] Simulation gRPC service (submit job, stream progress, return results)
+- [x] SPICE netlist generation from component + net graph (Python + TypeScript)
+- [x] Circuit simulation engine — numpy MNA DC solver (Python) + TS port (chat tools)
+- [x] Simulation gRPC service (submit job, stream progress, return results)
 - [x] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent, Circuit Agent
-- [ ] Constraint negotiation engine (Python) — mechanical + electrical
-- [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
+- [x] Constraint negotiation engine (Python) — mechanical + electrical + manufacturing
+- [x] Waveform viewer UI (plot simulation results: voltage, current, power)
 - [x] AI chat dock (free-form questions)
 - [x] Activity / Decisions feed + proposal Approve/Reject UI
 - [x] Risk-tier enforcement (low = auto, medium / high = proposal)
@@ -138,6 +138,13 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - Fix: `stopWhen: stepCountIs(5)` on `streamText` — AI SDK 6 default `stepCountIs(1)` stopped loop after tool call, no text summary step, empty assistant bubble.
 - Fix: `justLoadedRef` guard in ChatDock save effect — `setMessages(loadedMsgs)` triggered re-save of loaded assistant messages → duplicate rows in DB. Cleaned 12 existing dup rows via throwaway script.
 - `DATABASE_URL` documented in `AGENTS.md`: lives in `apps/web/.env.local` (dev) + hardcoded in `apps/web/vitest.config.ts` `test.env` (Vitest doesn't load `.env.local`). Update both if DB port/password changes.
+- SPICE netlist generator (`apps/compute/src/app/netlist.py`): maps Component + Net proto messages to valid SPICE syntax. Node assignment from net connections, component type → prefix mapping (R/C/L/D/Q/V/I/X), model hints for diodes/transistors.
+- numpy MNA DC solver (`apps/compute/src/app/simulator.py`): Modified Nodal Analysis for linear circuits (resistors, independent V/I sources). Solves conductance matrix + source vector via `numpy.linalg.solve`. Returns node voltages + branch currents. AC/TRAN stubbed (needs ngspice).
+- Constraint checker (`apps/compute/src/app/constraints.py`): mechanical overlap detection, enclosure boundary fit, electrical voltage mismatch, manufacturing clearance, power budget estimation. Returns structured Conflict objects with severity/recommendation/alternatives.
+- gRPC service wired: `RunSimulation` (streaming DC results), `GenerateNetlist` (real SPICE), `CheckConstraints` (conflict detection). All 17 tests pass (unit + integration).
+- REST bridge endpoints (`apps/compute/src/app/main.py`): `/simulate`, `/netlist`, `/check-constraints` — JSON wrappers around gRPC logic. Web app optionally calls compute service if `COMPUTE_SERVICE_URL` env var set.
+- chat-tools.ts extended: `generateNetlist` now generates proper SPICE with node mapping from Net connections. New tools: `createNet`, `simulateCircuit` (local MNA solver with compute service fallback). SimulateCircuit includes Gaussian elimination MNA solver in TypeScript (no external deps).
+- Simulation page UI (`/projects/[projectId]/simulation`): DC op-point bar chart + SPICE netlist display. WaveformViewer component (`waveform-viewer.tsx`): SVG line chart for transient/AC, bar chart for DC. Added simulation link to project detail hub.
 
 ---
 

@@ -7,6 +7,7 @@ dependencies = [
     "fastapi[standard]>=0.115",
     "grpcio>=1.70",
     "grpcio-tools>=1.70",
+    "numpy>=2",
     "pydantic>=2",
 ]
 
@@ -37,6 +38,11 @@ select = ["E", "F", "I", "N", "W", "UP"]
 [tool.ruff.lint.per-file-ignores]
 "src/generated/**" = ["ALL"]
 "**/grpc_server.py" = ["N802"]
+"**/simulator.py" = ["N806", "E741", "E501"]
+"**/constraints.py" = ["E501"]
+"**/netlist.py" = ["E501"]
+"**/main.py" = ["E501"]
+"**/test_grpc_server.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
