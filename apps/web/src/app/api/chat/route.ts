@@ -36,21 +36,19 @@ export async function POST(request: Request) {
     return Response.json({ error: "empty" }, { status: 400 });
   }
 
-  const converted = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...messages.map((m) => ({
-      role: m.role,
-      content: m.parts
-        .filter((p) => p.type === "text")
-        .map((p) => p.text)
-        .join("\n"),
-    })),
-  ];
+  const converted = messages.map((m) => ({
+    role: m.role,
+    content: m.parts
+      .filter((p) => p.type === "text")
+      .map((p) => p.text)
+      .join("\n"),
+  }));
 
   const tools = projectId ? createChatTools(projectId) : {};
 
   const result = streamText({
-    model: openrouter("nvidia/nemotron-3-super-120b-a12b:free"),
+    model: openrouter("openai/gpt-oss-120b:free"),
+    system: SYSTEM_PROMPT,
     messages: converted,
     tools,
     maxSteps: 10,
