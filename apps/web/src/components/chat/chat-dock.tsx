@@ -93,6 +93,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           <ChatMessages
             key={activeThreadId ?? "no-thread"}
             threadId={activeThreadId}
+            projectId={projectId}
             onSend={handleSend}
           />
         </div>
@@ -103,9 +104,11 @@ export function ChatDock({ projectId }: { projectId?: string }) {
 
 function ChatMessages({
   threadId,
+  projectId,
   onSend,
 }: {
   threadId: string | null;
+  projectId?: string;
   onSend: (text: string) => void;
 }) {
   const [input, setInput] = useState("");
@@ -113,7 +116,14 @@ function ChatMessages({
   const listRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
 
-  const transport = useMemo(() => new TextStreamChatTransport({ api: "/api/chat" }), []);
+  const transport = useMemo(
+    () =>
+      new TextStreamChatTransport({
+        api: "/api/chat",
+        body: projectId ? { projectId } : undefined,
+      }),
+    [projectId],
+  );
 
   const { messages, sendMessage, status, setMessages } = useChat({
     transport,

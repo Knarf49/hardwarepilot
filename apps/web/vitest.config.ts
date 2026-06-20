@@ -7,7 +7,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./test-setup.ts"],
     env: {
-      OPENCODE_API_KEY: "test-key",
+      OPENROUTER_API_KEY: "test-key",
     },
   },
   resolve: {

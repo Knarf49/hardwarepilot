@@ -28,6 +28,8 @@ Phase 0 (Foundation & Context) Done. Phase 1 (Monorepo Scaffold + Project CRUD) 
 | Server cache | TanStack Query |
 | Visualization | React Flow, Three.js, React Three Fiber |
 | AI | AI SDK 6 |
+| AI Provider | OpenRouter (OpenAI-compatible) — `nvidia/nemotron-3-super-120b-a12b:free` (pro), `openai/gpt-oss-120b:free` (flash) |
+| AI API Key | `OPENROUTER_API_KEY` in `apps/web/.env.local` (get free key at https://openrouter.ai/keys) |
 | Validation | Zod (authoritative), synced to Pydantic via JSON Schema |
 | Lint/Format (TS) | Biome |
 | Lint/Format (Python) | Ruff |
