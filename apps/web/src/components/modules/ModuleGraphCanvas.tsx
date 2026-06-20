@@ -1,26 +1,39 @@
 "use client";
 
 import {
+  addEdge,
   Background,
   Controls,
-  type Edge,
   MiniMap,
-  type Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
+import { useCallback } from "react";
 import "@xyflow/react/dist/style.css";
 import type { ModuleModel } from "@hardwarepilot/db";
+import type { Edge, Node } from "@xyflow/react";
+import { saveModulePosition } from "@/actions/module";
+
+interface ModuleConnection {
+  id: string;
+  sourceModuleId: string;
+  targetModuleId: string;
+  sourcePortId: string;
+  targetPortId: string;
+  type: string;
+}
 
 interface ModuleGraphCanvasProps {
   modules: ModuleModel[];
+  connections: ModuleConnection[];
+  projectId: string;
 }
 
-function buildNodesAndEdges(modules: ModuleModel[]): {
-  nodes: Node[];
-  edges: Edge[];
-} {
+function buildNodesAndEdges(
+  modules: ModuleModel[],
+  connections: ModuleConnection[],
+): { nodes: Node[]; edges: Edge[] } {
   const nodes: Node[] = modules.map((m, i) => {
     const pos = m.position as { x: number; y: number; z: number } | null;
     return {
@@ -44,13 +57,39 @@ function buildNodesAndEdges(modules: ModuleModel[]): {
     };
   });
 
-  return { nodes, edges: [] };
+  const edges: Edge[] = connections.map((c) => ({
+    id: c.id,
+    source: c.sourceModuleId,
+    target: c.targetModuleId,
+    label: `${c.sourcePortId} → ${c.targetPortId}`,
+    labelStyle: { fill: "#737373", fontSize: 10 },
+    style: { stroke: "#7C5CFC", strokeWidth: 1.5 },
+    animated: c.type === "electrical",
+  }));
+
+  return { nodes, edges };
 }
 
-export function ModuleGraphCanvas({ modules }: ModuleGraphCanvasProps) {
-  const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(modules);
+export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGraphCanvasProps) {
+  const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(modules, connections);
   const [nodes, _setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, _setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback(
+    (params: Parameters<typeof addEdge>[0]) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  );
+
+  const onNodeDragStop = useCallback(
+    (_event: unknown, node: Node) => {
+      const formData = new FormData();
+      formData.set("moduleId", node.id);
+      formData.set("projectId", projectId);
+      formData.set("position", JSON.stringify({ x: node.position.x, y: node.position.y }));
+      saveModulePosition(formData);
+    },
+    [projectId],
+  );
 
   return (
     <div className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden">
@@ -59,6 +98,8 @@ export function ModuleGraphCanvas({ modules }: ModuleGraphCanvasProps) {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodeDragStop={onNodeDragStop}
         fitView
         attributionPosition="bottom-left"
         className="bg-neutral-950"

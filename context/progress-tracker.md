@@ -77,7 +77,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 2 — Hardware Context Engine + Module Graph + Schematic
 
-**Status:** In Progress (25%)
+**Status:** Done (100%)
 
 ## Tasks
 
@@ -88,11 +88,16 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
   - `/projects/[projectId]/modules` — module list + React Flow graph canvas
   - CreateModuleDialog: name, type, ports (JSON), description
   - ModuleCard: display name, type, ports with direction, delete action
-  - ModuleGraphCanvas: React Flow nodes, background grid, controls, minimap
-- [ ] React Flow module graph canvas (module-level view) — drag to position, edge connections
-- [ ] Component-level schematic canvas within each module (add components, wire pins)
-- [ ] Constraint definition UI (mechanical + electrical)
-- [ ] Decision log panel
+- [x] React Flow interactive graph — drag nodes to position (auto-save), edge connections
+- [x] Component-level schematic — `/projects/[projectId]/components` — add components per module
+  - Module selector (tab bar), component form (name, type, value, footprint, pins)
+  - Component list with delete, per-module view
+- [x] Constraint definition UI — `/projects/[projectId]/constraints`
+  - Add constraint: domain (mechanical/electrical/manufacturing/assembly), priority, rule text
+  - Constraint list with domain badges, delete
+- [x] Decision log panel — shown on project detail page (conditional, when decisions exist)
+  - Actor badge (ai/user), timestamp, decision text, reason
+- [x] Project detail hub — links to Form, Modules, Components, Constraints + Decision Log preview
 
 ## Relevant Context
 

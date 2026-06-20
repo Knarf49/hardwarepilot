@@ -1,3 +1,4 @@
+import { db } from "@hardwarepilot/db";
 import { notFound } from "next/navigation";
 import { CreateModuleDialog } from "@/components/modules/CreateModuleDialog";
 import { ModuleCard } from "@/components/modules/ModuleCard";
@@ -9,7 +10,11 @@ export const dynamic = "force-dynamic";
 
 export default async function ModulesPage({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
-  const [project, modules] = await Promise.all([getProject(projectId), getModules(projectId)]);
+  const [project, modules, connections] = await Promise.all([
+    getProject(projectId),
+    getModules(projectId),
+    db.moduleConnection.findMany({ where: { projectId } }),
+  ]);
 
   if (!project) notFound();
 
@@ -36,7 +41,7 @@ export default async function ModulesPage({ params }: { params: Promise<{ projec
           <h2 className="text-sm font-medium text-neutral-400 uppercase tracking-wider mb-3">
             Module Graph
           </h2>
-          <ModuleGraphCanvas modules={modules} />
+          <ModuleGraphCanvas modules={modules} connections={connections} projectId={projectId} />
         </div>
       )}
 

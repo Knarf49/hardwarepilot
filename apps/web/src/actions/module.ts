@@ -150,3 +150,17 @@ export async function deleteModule(
     return { data: null, error: { code: "DB_ERROR", message: "Failed to delete module" } };
   }
 }
+
+export async function saveModulePosition(formData: FormData) {
+  const moduleId = formData.get("moduleId") as string;
+  const projectId = formData.get("projectId") as string;
+  const positionRaw = formData.get("position") as string;
+  if (!moduleId || !positionRaw) return;
+
+  const position = JSON.parse(positionRaw);
+  await db.module.update({
+    where: { id: moduleId },
+    data: { position },
+  });
+  revalidatePath(`/projects/${projectId}/modules`);
+}
