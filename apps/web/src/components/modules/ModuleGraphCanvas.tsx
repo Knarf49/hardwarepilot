@@ -12,10 +12,19 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "@xyflow/react/dist/style.css";
 import type { ModuleModel } from "@hardwarepilot/db";
+import { Trash2 } from "lucide-react";
 import { deleteModule, saveModulePosition } from "@/actions/module";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 interface ModuleConnection {
   id: string;
@@ -80,6 +89,9 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
   const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(modules, connections);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [contextNode, setContextNode] = useState<Node | null>(null);
+  const [contextOpen, setContextOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const { nodes: newNodes, edges: newEdges } = buildNodesAndEdges(modules, connections);
@@ -115,30 +127,80 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
     [projectId],
   );
 
+  const onNodeContextMenu = useCallback((event: React.MouseEvent | MouseEvent, node: Node) => {
+    event.preventDefault();
+    setContextNode(node);
+    setContextOpen(true);
+  }, []);
+
+  const onPaneContextMenu = useCallback((event: React.MouseEvent | MouseEvent) => {
+    event.preventDefault();
+    setContextNode(null);
+    setContextOpen(false);
+  }, []);
+
+  const handleDeleteContext = useCallback(() => {
+    if (!contextNode) return;
+    const formData = new FormData();
+    formData.set("moduleId", contextNode.id);
+    formData.set("projectId", projectId);
+    deleteModule(null, formData);
+    setContextOpen(false);
+    setContextNode(null);
+  }, [contextNode, projectId]);
+
   return (
-    <div className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onNodeDragStop={onNodeDragStop}
-        onNodesDelete={onNodesDelete}
-        deleteKeyCode={["Delete", "Backspace"]}
-        fitView
-        attributionPosition="bottom-left"
-        className="bg-neutral-950"
-      >
-        <Background color="#262626" gap={20} />
-        <Controls className="bg-neutral-900 border-neutral-800 fill-neutral-400" />
-        <MiniMap
-          nodeColor="#7C5CFC"
-          maskColor="rgba(0,0,0,0.7)"
-          className="bg-neutral-900 border-neutral-800"
-        />
-      </ReactFlow>
+    <div
+      ref={containerRef}
+      className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden"
+    >
+      <ContextMenu open={contextOpen} onOpenChange={setContextOpen}>
+        <ContextMenuTrigger className="w-full h-full p-0 border-0">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeDragStop={onNodeDragStop}
+            onNodesDelete={onNodesDelete}
+            onNodeContextMenu={onNodeContextMenu}
+            onPaneContextMenu={onPaneContextMenu}
+            deleteKeyCode={["Delete", "Backspace"]}
+            selectionOnDrag
+            panOnDrag={[2]}
+            fitView
+            attributionPosition="bottom-left"
+            className="bg-neutral-950"
+          >
+            <Background color="#262626" gap={20} />
+            <Controls className="bg-neutral-900 border-neutral-800 fill-neutral-400" />
+            <MiniMap
+              nodeColor="#7C5CFC"
+              maskColor="rgba(0,0,0,0.7)"
+              className="bg-neutral-900 border-neutral-800"
+            />
+          </ReactFlow>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="bg-neutral-900 border-neutral-800">
+          {contextNode && (
+            <>
+              <ContextMenuLabel className="text-neutral-400">
+                {(contextNode.data.name as string) ?? ""}
+              </ContextMenuLabel>
+              <ContextMenuSeparator className="bg-neutral-800" />
+              <ContextMenuItem
+                onClick={handleDeleteContext}
+                className="text-red-400 focus:bg-red-400/10 focus:text-red-400 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5 mr-2" />
+                Delete Module
+              </ContextMenuItem>
+            </>
+          )}
+        </ContextMenuContent>
+      </ContextMenu>
     </div>
   );
 }
