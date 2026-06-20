@@ -150,38 +150,53 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 4 — AI Enclosure Generator + 3D
 
-**Status:** Not Started (0%)
+**Status:** Done (100%)
 
 ## Tasks
 
-- [ ] Three.js + React Three Fiber 3D preview workspace
-- [ ] Python enclosure generation (mesh from form + modules)
-- [ ] Enclosure Agent implementation
-- [ ] STL export
-- [ ] Mounting, cutouts, internal supports generation
+- [x] Three.js + React Three Fiber 3D preview workspace
+- [x] Python enclosure generation (mesh from form + modules)
+- [x] Enclosure Agent implementation
+- [x] STL export (binary STL via numpy)
+- [x] Mounting, cutouts, internal supports generation
 
 ## Relevant Context
 
 - project.md — AI Enclosure Generator
 - architecture.md — Enclosure Agent, Output Strategy
 
+## Notes
+
+- Three.js + @react-three/fiber + @react-three/drei installed in apps/web
+- Enclosure3D component: R3F Canvas with OrbitControls, enclosure walls extrusion from form polygon, module placement blocks with name labels, grid helper
+- Enclosure page at `/projects/[id]/enclosure`: 3D viewer + stats panel + STL download (when compute service available)
+- Python enclosure module (`apps/compute/src/app/enclosure.py`): CCW-ordered polygon extrusion with wall thickness, convex hull mounting holes, binary STL export with face normals
+- REST endpoint `/enclosure/generate` returns mesh + base64 STL
+- Enclosure Agent (`packages/agents/src/agents/enclosure.ts`): ToolLoopAgent with pro model, determines strategy (single/multi/flex), mounting points, cutouts
+
 ---
 
 # Phase 5 — Design Review
 
-**Status:** Not Started (0%)
+**Status:** Done (100%)
 
 ## Tasks
 
-- [ ] Review Agent implementation
-- [ ] Design review workspace (accessibility, clearance, manufacturing, assembly)
-- [ ] Warning and report UI in activity feed
-- [ ] Manufacturing safety wording enforcement (no "production-ready" unless validated)
+- [x] Review Agent exists (from Phase 3), now wired via review-engine.ts
+- [x] Design review page at `/projects/[id]/review` — AI-powered accessibility, clearance, manufacturing
+- [x] ReviewReport component: overall score badge, categorized issue blocks with severity icons
+- [x] Manufacturing safety wording enforcement in risk-enforcement.ts (Rule 13)
 
 ## Relevant Context
 
 - project.md — Design Review
 - ai-workflow-rules.md — Rule 13 (manufacturing safety)
+
+## Notes
+
+- review-engine.ts: calls `generateObject` with ReviewSchema, project context (form/modules/components/constraints/decisions) → structured review. Uses flash model for speed. Post-processes output to enforce Rule 13 (replaces "production-ready" → "ready for prototyping review", etc.)
+- risk-enforcement.ts: `sanitizeManufacturingText()` scans for 9 disallowed phrases, replaces with conservative alternatives. Returns warnings for transparency.
+- ReviewReport component: score banner with pass/pass_with_warnings/fail, collapsible issue categories (Eye/Ruler/Wrench icons), severity-colored borders (red/amber/blue), actionable recommendations
 
 ---
 

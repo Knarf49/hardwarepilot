@@ -1,5 +1,6 @@
 export { circuitAgent } from "./agents/circuit";
 export { constraintAgent } from "./agents/constraint";
+export { enclosureAgent } from "./agents/enclosure";
 export { intentAgent } from "./agents/intent";
 export { moduleAgent } from "./agents/module";
 export { reviewAgent } from "./agents/review";

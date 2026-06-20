@@ -43,6 +43,7 @@ select = ["E", "F", "I", "N", "W", "UP"]
 "**/netlist.py" = ["E501"]
 "**/main.py" = ["E501"]
 "**/test_grpc_server.py" = ["E501"]
+"**/enclosure.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,5 +1,5 @@
 import { db } from "@hardwarepilot/db";
-import { Activity, ArrowRight, Box, Cpu, FileText, Gavel, ListChecks } from "lucide-react";
+import { Activity, ArrowRight, Box, ClipboardCheck, Cpu, FileText, Gavel, ListChecks } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getForm } from "@/lib/services/form";
@@ -60,6 +60,18 @@ export default async function ProjectDetailPage({
       icon: Activity,
       title: "Simulation",
       subtitle: "DC operating point analysis & SPICE netlist",
+    },
+    {
+      href: `/projects/${projectId}/enclosure`,
+      icon: Box,
+      title: "Enclosure",
+      subtitle: "3D preview & STL export",
+    },
+    {
+      href: `/projects/${projectId}/review`,
+      icon: ClipboardCheck,
+      title: "Design Review",
+      subtitle: "Accessibility, clearance & manufacturing check",
     },
   ];
 

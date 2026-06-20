@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from src.app import constraints, netlist, simulator
+from src.app import constraints, enclosure, netlist, simulator
 from src.generated import compute_pb2
 
 app = FastAPI(
@@ -148,4 +148,38 @@ async def check_constraints_rest(req: ConstraintRestRequest):
             for c in response.conflicts
         ],
         "summary": response.summary,
+    }
+
+
+class EnclosureRequest(BaseModel):
+    project_id: str
+    vertices: list[dict] = []
+    height: float = 30.0
+    wall_thickness: float = 2.0
+
+
+@app.post("/enclosure/generate")
+async def generate_enclosure(req: EnclosureRequest):
+    form_verts = [(v.get("x", 0), v.get("y", 0)) for v in req.vertices]
+    if len(form_verts) < 3:
+        return {"success": False, "error": "Need at least 3 vertices for enclosure form"}
+
+    mesh = enclosure.generate_enclosure_mesh(form_verts, req.height, req.wall_thickness)
+    holes = enclosure.generate_mounting_holes(form_verts)
+
+    stl_bytes = enclosure.export_stl(mesh)
+
+    return {
+        "success": True,
+        "mesh": {
+            "vertices": mesh["vertices"],
+            "triangles": mesh["triangles"],
+        },
+        "mounting_holes": [{"x": h[0], "y": h[1], "radius": h[2], "depth": h[3]} for h in holes],
+        "stl_base64": __import__("base64").b64encode(stl_bytes).decode(),
+        "dimensions": {
+            "height": req.height,
+            "wall_thickness": req.wall_thickness,
+            "vertex_count": len(form_verts),
+        },
     }
