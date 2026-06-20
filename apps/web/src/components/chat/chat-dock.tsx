@@ -5,7 +5,7 @@ import type { UIMessage } from "ai";
 import { TextStreamChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createThread, loadMessages, saveMessage } from "@/actions/chat";
+import { loadMessages, saveMessage } from "@/actions/chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -65,12 +65,16 @@ export function ChatDock({ projectId }: { projectId?: string }) {
   }, [messages, status, persistMessage]);
 
   const handleNewThread = useCallback(async () => {
-    const fd = new FormData();
-    fd.append("title", "New Chat");
-    if (projectId) fd.append("projectId", projectId);
-    const result = await createThread(null, fd);
-    if (result.data) {
-      setActiveThreadId(result.data.id);
+    const body: Record<string, string> = { title: "New Chat" };
+    if (projectId) body.projectId = projectId;
+    const res = await fetch("/api/threads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setActiveThreadId(data.id);
       setRefreshKey((k) => k + 1);
     }
   }, [projectId, setActiveThreadId]);
@@ -112,7 +116,6 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           </div>
 
           <ThreadSelector
-            projectId={projectId ?? null}
             activeThreadId={activeThreadId}
             refreshKey={refreshKey}
             onSelect={handleSelectThread}

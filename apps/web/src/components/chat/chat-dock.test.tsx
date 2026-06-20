@@ -23,6 +23,10 @@ vi.mock("@/actions/chat", () => ({
 
 describe("ChatDock", () => {
   test("renders toggle button when closed", () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: async () => [],
+    } as Response);
     render(<ChatDock />);
     expect(screen.getByRole("button", { name: /open ai assistant/i })).toBeInTheDocument();
   });

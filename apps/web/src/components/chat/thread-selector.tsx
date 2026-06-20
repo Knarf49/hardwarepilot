@@ -2,23 +2,20 @@
 
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { getThreads } from "@/actions/chat";
 import { cn } from "@/lib/utils";
 
 type Thread = {
   id: string;
   title: string;
-  createdAt: Date;
+  createdAt: string;
 };
 
 export function ThreadSelector({
-  projectId,
   activeThreadId,
   refreshKey,
   onSelect,
   onNew,
 }: {
-  projectId: string | null;
   activeThreadId: string | null;
   refreshKey: number;
   onSelect: (id: string) => void;
@@ -27,9 +24,12 @@ export function ThreadSelector({
   const [threads, setThreads] = useState<Thread[]>([]);
 
   const load = useCallback(async () => {
-    const result = await getThreads(projectId ?? undefined);
-    if (result.data) setThreads(result.data);
-  }, [projectId]);
+    const res = await fetch("/api/threads");
+    if (res.ok) {
+      const data = await res.json();
+      setThreads(data);
+    }
+  }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: refreshKey triggers re-fetch after new thread
   useEffect(() => {
