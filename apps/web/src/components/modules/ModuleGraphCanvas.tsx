@@ -170,7 +170,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
             onPaneContextMenu={onPaneContextMenu}
             deleteKeyCode={["Delete", "Backspace"]}
             selectionOnDrag
-            panOnDrag={[1]}
+            panActivationKeyCode="Space"
             fitView
             attributionPosition="bottom-left"
             className="bg-neutral-950"
