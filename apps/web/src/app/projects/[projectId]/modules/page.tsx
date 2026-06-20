@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CreateModuleDialog } from "@/components/modules/CreateModuleDialog";
 import { ModuleCard } from "@/components/modules/ModuleCard";
 import { ModuleGraphCanvas } from "@/components/modules/ModuleGraphCanvas";
+import { ModuleTemplates } from "@/components/modules/ModuleTemplates";
 import { getModules } from "@/lib/services/module";
 import { getProject } from "@/lib/services/project";
 
@@ -35,6 +36,8 @@ export default async function ModulesPage({ params }: { params: Promise<{ projec
         </div>
         <CreateModuleDialog projectId={projectId} />
       </div>
+
+      <ModuleTemplates projectId={projectId} />
 
       {modules.length > 0 && (
         <div className="mb-8">

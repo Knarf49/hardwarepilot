@@ -3,6 +3,7 @@
 import { db } from "@hardwarepilot/db";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { moduleTemplates } from "@/lib/templates/modules";
 
 const moduleTypeEnum = z.enum([
   "power",
@@ -163,4 +164,47 @@ export async function saveModulePosition(formData: FormData) {
     data: { position },
   });
   revalidatePath(`/projects/${projectId}/modules`);
+}
+
+export async function createModuleFromTemplate(
+  _prev: ActionResult<unknown> | null,
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
+  const projectId = formData.get("projectId") as string;
+  const templateIndex = Number(formData.get("templateIndex"));
+
+  if (!projectId || Number.isNaN(templateIndex)) {
+    return {
+      data: null,
+      error: { code: "VALIDATION", message: "Missing projectId or templateIndex" },
+    };
+  }
+
+  const template = moduleTemplates[templateIndex];
+  if (!template) {
+    return {
+      data: null,
+      error: { code: "VALIDATION", message: "Invalid template index" },
+    };
+  }
+
+  try {
+    const mod = await db.module.create({
+      data: {
+        projectId,
+        name: template.name,
+        type: template.type,
+        description: template.description,
+        ports: template.ports,
+        dimension: template.dimension,
+      },
+    });
+    revalidatePath(`/projects/${projectId}/modules`);
+    return { data: { id: mod.id }, error: null };
+  } catch {
+    return {
+      data: null,
+      error: { code: "DB_ERROR", message: "Failed to create module from template" },
+    };
+  }
 }
