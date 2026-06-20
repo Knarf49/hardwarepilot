@@ -12,7 +12,7 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import "@xyflow/react/dist/style.css";
 import type { ModuleModel } from "@hardwarepilot/db";
 import { deleteModule, saveModulePosition } from "@/actions/module";
@@ -78,8 +78,14 @@ function buildNodesAndEdges(
 
 export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGraphCanvasProps) {
   const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(modules, connections);
-  const [nodes, _setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    const { nodes: newNodes, edges: newEdges } = buildNodesAndEdges(modules, connections);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [modules, connections, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Parameters<typeof addEdge>[0]) => setEdges((eds) => addEdge(params, eds)),
