@@ -8,6 +8,8 @@ export default defineConfig({
     setupFiles: ["./test-setup.ts"],
     env: {
       OPENCODE_API_KEY: "test-key",
+      DATABASE_URL:
+        "postgresql://postgres:postgres@127.0.0.1:54322/postgres",
     },
   },
   resolve: {
