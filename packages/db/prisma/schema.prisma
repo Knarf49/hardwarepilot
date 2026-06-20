@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace        Workspace          @relation(fields: [workspaceId], references: [id])
+  forms            Form[]
+  modules          Module[]
+  moduleConnections ModuleConnection[]
+  constraints      Constraint[]
+  decisions        Decision[]
+  aiProposals      AIProposal[]
+  artifacts        Artifact[]
+  nets             Net[]
+}
+
+model Form {
+  id               String   @id @default(uuid())
+  projectId        String
+  polygon          Json
+  dimension        Json
+  interactionZones Json?
+  requirements     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  project   Project    @relation(fields: [projectId], references: [id])
+  modules   Module[]
+  artifacts Artifact[]
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  projectId   String
+  formId      String?
+  name        String
+  type        String
+  description String?
+  ports       Json
+  position    Json?
+  rotation    Json?
+  dimension   Json
+  spanning    Json?
+  status      String   @default("proposed")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project            Project             @relation(fields: [projectId], references: [id])
+  form               Form?               @relation(fields: [formId], references: [id])
+  components         Component[]
+  nets               Net[]
+  constraints        Constraint[]
+  sourceConnections  ModuleConnection[]  @relation("SourceModule")
+  targetConnections  ModuleConnection[]  @relation("TargetModule")
+  artifacts          Artifact[]          @relation("ModuleArtifact")
+}
+
+model Component {
+  id        String   @id @default(uuid())
+  moduleId  String
+  type      String
+  name      String
+  value     String?
+  tolerance String?
+  partNumber String?
+  footprint String?
+  pins      Json
+  position  Json?
+  rotation  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  module Module @relation(fields: [moduleId], references: [id])
+}
+
+model Net {
+  id          String   @id @default(uuid())
+  moduleId    String
+  projectId   String
+  name        String
+  connections Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  module  Module  @relation(fields: [moduleId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+}
+
+model ModuleConnection {
+  id             String   @id @default(uuid())
+  projectId      String
+  sourceModuleId String
+  targetModuleId String
+  sourcePortId   String
+  targetPortId   String
+  type           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  project      Project @relation(fields: [projectId], references: [id])
+  sourceModule Module  @relation("SourceModule", fields: [sourceModuleId], references: [id])
+  targetModule Module  @relation("TargetModule", fields: [targetModuleId], references: [id])
+}
+
+model Constraint {
+  id        String   @id @default(uuid())
+  projectId String
+  moduleId  String?
+  domain    String
+  rule      String
+  expression Json?
+  priority  String   @default("should")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project  @relation(fields: [projectId], references: [id])
+  module  Module?  @relation(fields: [moduleId], references: [id])
+}
+
+model Decision {
+  id               String   @id @default(uuid())
+  projectId        String
+  actor            String
+  decision         String
+  reason           String
+  tradeoffs        String?
+  alternatives     Json?
+  affectedNodeType String?
+  affectedNodeId   String?
+  createdAt        DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
+}
+
+model AIProposal {
+  id            String   @id @default(uuid())
+  projectId     String
+  agentType     String
+  riskTier      String
+  title         String
+  description   String
+  reason        String
+  tradeoffs     String?
+  alternatives  Json?
+  affectedNodes Json?
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id])
+}
+
+model Artifact {
+  id        String   @id @default(uuid())
+  projectId String
+  formId    String?
+  moduleId  String?
+  type      String
+  name      String
+  filePath  String?
+  metadata  Json?
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project  @relation(fields: [projectId], references: [id])
+  form    Form?    @relation(fields: [formId], references: [id])
+  module  Module?  @relation("ModuleArtifact", fields: [moduleId], references: [id])
+}

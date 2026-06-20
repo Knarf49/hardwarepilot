@@ -55,7 +55,7 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 - Tailwind v4 + shadcn/ui, App Router, Turbopack
 - PostgreSQL 17 Alpine via Docker Compose (port 54322) with pgAdmin UI (port 5050)
 - Prisma v7 (ESM) with `@prisma/adapter-pg` driver adapter, client generated to `prisma/generated/`
-- Project model (id, name, description, createdAt, updatedAt) pushed to DB
+- Prisma schema: 11 models (Workspace, Project, Form, Module, Component, Net, ModuleConnection, Constraint, Decision, AIProposal, Artifact) — pushed to DB, client regenerated
 - Python compute service (`apps/compute/src/app/main.py`) with Dockerfile, uv package manager
 - `docker-compose.yml` manages PostgreSQL + pgAdmin + compute service
 
