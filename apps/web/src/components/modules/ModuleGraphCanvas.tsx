@@ -20,6 +20,7 @@ import { deleteModule, saveModulePosition } from "@/actions/module";
 import {
   ContextMenu,
   ContextMenuContent,
+  ContextMenuGroup,
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
@@ -185,7 +186,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
         </ContextMenuTrigger>
         <ContextMenuContent className="bg-neutral-900 border-neutral-800">
           {contextNode && (
-            <>
+            <ContextMenuGroup>
               <ContextMenuLabel className="text-neutral-400">
                 {(contextNode.data.name as string) ?? ""}
               </ContextMenuLabel>
@@ -197,7 +198,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
                 <Trash2 className="w-3.5 h-3.5 mr-2" />
                 Delete Module
               </ContextMenuItem>
-            </>
+            </ContextMenuGroup>
           )}
         </ContextMenuContent>
       </ContextMenu>
