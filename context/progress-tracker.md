@@ -109,11 +109,11 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 # Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
-**Status:** Not Started (0%)
+**Status:** In Progress (10%)
 
 ## Tasks
 
-- [ ] FastAPI compute service scaffold + gRPC contract
+- [x] FastAPI compute service scaffold + gRPC contract
 - [ ] ngspice / PySpice integration in `apps/compute`
 - [ ] SPICE netlist generation from component + net graph
 - [ ] Simulation gRPC service (submit job, stream progress, return results)

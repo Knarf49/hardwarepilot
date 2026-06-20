@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package hardwarepilot.compute;
+
+enum SimulationStatus {
+  SIMULATION_STATUS_UNSPECIFIED = 0;
+  SIMULATION_STATUS_PENDING = 1;
+  SIMULATION_STATUS_RUNNING = 2;
+  SIMULATION_STATUS_COMPLETED = 3;
+  SIMULATION_STATUS_FAILED = 4;
+}
+
+message SimulationRequest {
+  string project_id = 1;
+  string netlist = 2;
+  enum AnalysisType {
+    ANALYSIS_TYPE_UNSPECIFIED = 0;
+    ANALYSIS_TYPE_DC = 1;
+    ANALYSIS_TYPE_AC = 2;
+    ANALYSIS_TYPE_TRANSIENT = 3;
+  }
+  AnalysisType analysis_type = 3;
+  double stop_time = 4;
+  double time_step = 5;
+}
+
+message SimulationResult {
+  string job_id = 1;
+  SimulationStatus status = 2;
+  repeated Signal signals = 3;
+  string error = 4;
+}
+
+message Signal {
+  string name = 1;
+  repeated double time = 2;
+  repeated double voltage = 3;
+  repeated double current = 4;
+  repeated double power = 5;
+}
+
+message SimulationProgress {
+  string job_id = 1;
+  SimulationStatus status = 2;
+  double progress = 3;
+  string message = 4;
+}
+
+message ConstraintCheckRequest {
+  string project_id = 1;
+  repeated Module modules = 2;
+  Form form = 3;
+  repeated Constraint constraints = 4;
+}
+
+message Module {
+  string id = 1;
+  string name = 2;
+  Dimension dimension = 3;
+  Position position = 4;
+  repeated Port ports = 5;
+}
+
+message Dimension {
+  double width = 1;
+  double height = 2;
+  double depth = 3;
+}
+
+message Position {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double rotation = 4;
+}
+
+message Port {
+  string name = 1;
+  string protocol = 2;
+  double voltage = 3;
+}
+
+message Form {
+  repeated Point vertices = 1;
+}
+
+message Point {
+  double x = 1;
+  double y = 2;
+}
+
+message Constraint {
+  string id = 1;
+  string domain = 2;
+  string rule = 3;
+  string priority = 4;
+}
+
+message ConstraintCheckResponse {
+  string project_id = 1;
+  repeated Conflict conflicts = 2;
+  string summary = 3;
+}
+
+message Conflict {
+  string domain = 1;
+  string severity = 2;
+  string description = 3;
+  string recommendation = 4;
+  repeated string alternatives = 5;
+}
+
+message NetlistRequest {
+  string project_id = 1;
+  repeated Component components = 2;
+  repeated Net nets = 3;
+}
+
+message Component {
+  string refdes = 1;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+  repeated Pin pins = 5;
+}
+
+message Pin {
+  string name = 1;
+  int32 number = 2;
+}
+
+message Net {
+  string name = 1;
+  repeated Node nodes = 2;
+}
+
+message Node {
+  string component = 1;
+  string pin = 2;
+}
+
+message NetlistResponse {
+  string netlist = 1;
+  repeated string warnings = 2;
+}
+
+service ComputeService {
+  rpc Health(HealthRequest) returns (HealthResponse);
+  rpc RunSimulation(SimulationRequest) returns (stream SimulationResult);
+  rpc GenerateNetlist(NetlistRequest) returns (NetlistResponse);
+  rpc CheckConstraints(ConstraintCheckRequest) returns (ConstraintCheckResponse);
+}
+
+message HealthRequest {}
+message HealthResponse {
+  string status = 1;
+  string version = 2;
+}
