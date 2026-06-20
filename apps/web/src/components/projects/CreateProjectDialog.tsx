@@ -29,7 +29,7 @@ export function CreateProjectDialog({ workspaceId }: { workspaceId: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-[#7C5CFC] hover:bg-[#6B4FE0] gap-2">
+      <DialogTrigger className="inline-flex items-center gap-2 rounded-lg bg-[#7C5CFC] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#6B4FE0] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] disabled:pointer-events-none disabled:opacity-50">
         <Plus className="w-4 h-4" />
         New Project
       </DialogTrigger>

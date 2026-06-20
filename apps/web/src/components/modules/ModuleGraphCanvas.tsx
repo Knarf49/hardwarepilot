@@ -155,9 +155,7 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
       ref={containerRef}
       className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden [&_.react-flow__pane]:cursor-auto"
     >
-      <style>
-        {".react-flow__controls-button svg{fill:black}"}
-      </style>
+      <style>{".react-flow__controls-button svg{fill:black}"}</style>
       <ContextMenu open={contextOpen} onOpenChange={setContextOpen}>
         <ContextMenuTrigger className="w-full h-full p-0 border-0">
           <ReactFlow
