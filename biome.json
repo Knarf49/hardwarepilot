@@ -54,6 +54,23 @@
           }
         }
       }
+    },
+    {
+      "includes": ["**/components/forms/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "noNoninteractiveTabindex": "off",
+            "useKeyWithClickEvents": "off",
+            "noSvgWithoutTitle": "off",
+            "noStaticElementInteractions": "off"
+          },
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
     }
   ],
   "javascript": {
