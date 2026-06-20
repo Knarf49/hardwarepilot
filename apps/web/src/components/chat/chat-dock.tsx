@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { TextStreamChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ export function ChatDock() {
   const [input, setInput] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
 
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
+  const transport = useMemo(() => new TextStreamChatTransport({ api: "/api/chat" }), []);
 
   const { messages, sendMessage, status } = useChat({ transport });
 
