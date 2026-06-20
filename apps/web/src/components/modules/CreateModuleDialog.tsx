@@ -43,11 +43,9 @@ export function CreateModuleDialog({ projectId }: { projectId: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-[#7C5CFC] hover:bg-[#6B4FE0] gap-2">
-          <Plus className="w-4 h-4" />
-          Add Module
-        </Button>
+      <DialogTrigger className="bg-[#7C5CFC] hover:bg-[#6B4FE0] gap-2">
+        <Plus className="w-4 h-4" />
+        Add Module
       </DialogTrigger>
       <DialogContent className="bg-neutral-900 border-neutral-800 text-neutral-100 max-h-[80vh] overflow-y-auto">
         <DialogHeader>

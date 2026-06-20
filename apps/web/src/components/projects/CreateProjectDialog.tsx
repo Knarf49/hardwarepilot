@@ -29,11 +29,9 @@ export function CreateProjectDialog({ workspaceId }: { workspaceId: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-[#7C5CFC] hover:bg-[#6B4FE0] gap-2">
-          <Plus className="w-4 h-4" />
-          New Project
-        </Button>
+      <DialogTrigger className="bg-[#7C5CFC] hover:bg-[#6B4FE0] gap-2">
+        <Plus className="w-4 h-4" />
+        New Project
       </DialogTrigger>
       <DialogContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
         <DialogHeader>
