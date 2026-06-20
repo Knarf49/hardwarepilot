@@ -6,12 +6,25 @@ import { TextStreamChatTransport } from "ai";
 import { MessageSquare, Send, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { loadMessages, saveMessage } from "@/actions/chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/stores/chat-store";
 import { ThreadSelector } from "./thread-selector";
+
+async function saveMsg(threadId: string, role: string, parts: unknown) {
+  await fetch("/api/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ threadId, role, parts }),
+  });
+}
+
+async function loadMsgs(threadId: string) {
+  const res = await fetch(`/api/messages?threadId=${threadId}`);
+  if (res.ok) return (await res.json()) as UIMessage[];
+  return [];
+}
 
 export function ChatDock({ projectId }: { projectId?: string }) {
   const { isOpen, activeThreadId, toggle, close, setActiveThreadId } = useChatStore();
@@ -20,12 +33,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
   const handleSend = useCallback(
     (text: string) => {
       if (!activeThreadId) return;
-      const parts = [{ type: "text", text }];
-      const fd = new FormData();
-      fd.append("threadId", activeThreadId);
-      fd.append("role", "user");
-      fd.append("parts", JSON.stringify(parts));
-      saveMessage(null, fd);
+      saveMsg(activeThreadId, "user", [{ type: "text", text }]);
     },
     [activeThreadId],
   );
@@ -103,32 +111,35 @@ function ChatMessages({
   const [input, setInput] = useState("");
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
+  const loadedRef = useRef(false);
 
   const transport = useMemo(() => new TextStreamChatTransport({ api: "/api/chat" }), []);
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, setMessages } = useChat({
     transport,
     messages: initialMessages,
   });
 
   useEffect(() => {
     if (threadId) {
-      loadMessages(threadId).then((result) => {
-        if (result.data) setInitialMessages(result.data as UIMessage[]);
+      loadedRef.current = false;
+      loadMsgs(threadId).then((msgs) => {
+        if (!loadedRef.current) {
+          setInitialMessages(msgs);
+          setMessages(msgs);
+          loadedRef.current = true;
+        }
       });
     } else {
       setInitialMessages([]);
+      setMessages([]);
     }
-  }, [threadId]);
+  }, [threadId, setMessages]);
 
   useEffect(() => {
     const last = messages[messages.length - 1];
     if (last && last.role === "assistant" && status === "ready" && threadId) {
-      const fd = new FormData();
-      fd.append("threadId", threadId);
-      fd.append("role", "assistant");
-      fd.append("parts", JSON.stringify(last.parts));
-      saveMessage(null, fd);
+      saveMsg(threadId, "assistant", last.parts);
     }
   }, [messages, status, threadId]);
 
@@ -168,14 +179,12 @@ function ChatMessages({
               if (part.type === "text") {
                 if (msg.role === "assistant") {
                   return (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: parts are immutable, order stable
+                    // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
                     <ReactMarkdown key={i}>{part.text}</ReactMarkdown>
                   );
                 }
-                return (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: parts are immutable, order stable
-                  <span key={i}>{part.text}</span>
-                );
+                // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
+                return <span key={i}>{part.text}</span>;
               }
               return null;
             })}

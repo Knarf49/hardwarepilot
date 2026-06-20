@@ -18,16 +18,9 @@ vi.mock("react-markdown", () => ({
   default: ({ children }: { children: string }) => children,
 }));
 
-vi.mock("@/actions/chat", () => ({
-  getThreads: async () => ({ data: [], error: null }),
-  loadMessages: async () => ({ data: [], error: null }),
-  saveMessage: vi.fn(),
-  createThread: vi.fn(),
-}));
-
 describe("ChatDock", () => {
   test("renders toggle button when closed", () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
       ok: true,
       json: async () => [],
     } as Response);
