@@ -18,7 +18,7 @@ HardwarePilot is not:
 - A CAD replacement
 - An AI chat wrapper
 
-HardwarePilot is a Hardware Context Graph platform where form, electronics, and manufacturing constraints negotiate continuously, and all generated artifacts are derived from that graph.
+HardwarePilot is a Hardware Context Graph platform where form, electronics (including circuit-level simulation), and manufacturing constraints negotiate continuously, and all generated artifacts — from SPICE netlists to STL files — are derived from that graph.
 
 ---
 
@@ -30,6 +30,8 @@ The Hardware Context Graph is the source of truth.
 
 The following are derived artifacts:
 
+- SPICE netlists
+- Simulation results
 - PCB layouts
 - STL files
 - STEP files
@@ -180,7 +182,7 @@ Properties:
 
 ## Module
 
-A functional electronics block.
+A functional electronics block composed of components and nets.
 
 Examples:
 
@@ -191,9 +193,18 @@ Examples:
 - Connectivity
 - Battery
 
+Modules contain:
+
+- **Components**: discrete parts (resistors, capacitors, ICs, transistors, connectors)
+  with values, tolerances, part numbers, and footprints
+- **Nets**: wire connections between component pins, within the module and across
+  module boundaries (via module ports)
+- **Ports**: external connection points exposed by the module (I2C, SPI, power, GPIO)
+
 Modules are independent from PCB layouts.
 
-The system reasons about modules before boards.
+The system reasons about modules before boards, and components within modules
+before traces.
 
 ---
 
@@ -207,6 +218,9 @@ Examples:
 - USB must remain accessible
 - OLED must be visible
 - Buttons must be reachable
+- Voltage rail must stay within 5% tolerance
+- MCU I/O pins must not exceed rated current
+- Power dissipation must stay within thermal budget
 
 Constraints are evaluated continuously.
 
@@ -244,6 +258,8 @@ Examples:
 - BOM
 - PCB Drafts
 - Manufacturing Reports
+- SPICE Netlist (derived from component + net graph, always regenerable)
+- Simulation Results (waveform data, operating point tables)
 
 Artifacts are derived from the graph.
 
@@ -256,14 +272,15 @@ The Hardware Context Graph is the system's primary data model.
 Nodes:
 
 - Form
-- Modules
+- Modules (containing Components and Nets)
+- Components (resistors, capacitors, ICs, transistors — sub-nodes within Modules)
 - Constraints
 - Decisions
 - Manufacturing Rules
 
 Edges:
 
-- Electrical relationships
+- Electrical relationships (module port connections, net-to-pin connections)
 - Mechanical relationships
 - Placement relationships
 - Manufacturing dependencies
@@ -279,8 +296,8 @@ The Constraint Negotiation Engine is the core business logic.
 Inputs:
 
 - Form
-- Modules
-- Constraints
+- Modules (with component and net data)
+- Constraints (mechanical + electrical)
 - Manufacturing Rules
 
 Outputs:
@@ -374,17 +391,37 @@ Detects:
 
 ---
 
+## Circuit Agent
+
+Responsible for:
+
+- Suggesting component values based on module requirements
+- Detecting circuit topology issues (floating nodes, missing pull-ups, reversed diodes)
+- Validating electrical constraints (voltage range, current budget, power dissipation)
+- Auto-generating SPICE netlist from component + net graph state
+- Interpreting simulation results and surfacing warnings
+
+Output:
+
+- Component recommendations
+- Topology warnings
+- Simulation-ready netlist
+- Post-simulation validation report
+
+---
+
 # Browser Editor
 
 HardwarePilot is not a full CAD environment.
 
 The browser editor focuses on:
 
-- Modules
-- Regions
-- Placement
-- Constraints
-- Relationships
+- Modules and their internal components
+- Component placement within modules
+- Net wiring between component pins
+- Regions and placement on form
+- Constraints (mechanical + electrical)
+- Relationships (module port connections, net-to-pin connections)
 
 Users interact with design intent rather than geometry.
 
@@ -433,6 +470,8 @@ Supported Outputs:
 - STL
 - STEP
 - BOM
+- SPICE Netlist
+- Simulation Results (waveform plots, operating point data)
 - Architecture Reports
 - Design Reviews
 
@@ -470,6 +509,9 @@ File Storage:
 AI:
 - OpenAI APIs
 
+Simulation:
+- ngspice / PySpice (runs in apps/compute)
+
 Visualization:
 - React Flow
 - Three.js
@@ -488,7 +530,6 @@ Examples:
 - Flex PCB Design
 - Automated Routing
 - Supplier Selection
-- Simulation
 - DFM Validation
 
 No feature should bypass the Hardware Context Graph.
@@ -497,6 +538,8 @@ No feature should bypass the Hardware Context Graph.
 
 # Architectural North Star
 
-The Hardware Context Graph is the permanent representation of user intent.
+The Hardware Context Graph is the permanent representation of user intent — from
+product shape down to component pin connections.
 
-Everything else is generated from it.
+Everything else — STL, BOM, SPICE netlist, simulation results, PCB drafts —
+is generated from it.

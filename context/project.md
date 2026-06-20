@@ -32,6 +32,7 @@ HardwarePilot combines:
 - AI hardware assistance
 - PCB architecture planning
 - Enclosure generation
+- Circuit simulation (SPICE)
 - Design validation
 
 ---
@@ -60,7 +61,10 @@ This translation process is slow, repetitive, and error-prone.
 
 A circuit is not a board.
 
-A circuit is a collection of functional modules.
+A circuit is a collection of functional modules — each containing components
+connected by nets. Functional modules reason at a high level (Power, MCU,
+Sensor), while internal components (resistors, capacitors, ICs) and nets
+enable circuit simulation and validation.
 
 Example:
 
@@ -98,7 +102,7 @@ Pain:
 
 Pain:
 
-"I understand circuits but struggle with mechanical design and enclosure creation."
+"I understand circuits but struggle with mechanical design and enclosure creation. I also need to validate my circuit before building — does this work?"
 
 ---
 
@@ -198,13 +202,34 @@ Best for:
 
 ---
 
-### Step 4 — Interactive Refinement
+### Step 4 — Design & Simulate Electronics
+
+Users define the internal schematic for each functional module:
+
+- Add components (resistors, capacitors, ICs, transistors, connectors) inside modules
+- Wire nets between component pins within and across modules
+- Assign component values and part numbers
+- Run SPICE simulation (transient, AC, DC sweep) on the full circuit
+- View waveform results, probe voltages and currents at any net
+
+AI validates:
+
+- Clearance and routing feasibility
+- Assembly and manufacturing constraints
+- Electrical constraints (voltage range, current limits, power integrity)
+- Circuit topology warnings (floating inputs, missing pull-ups, etc.)
+
+---
+
+### Step 5 — Interactive Refinement
 
 Users can:
 
 - Move modules
 - Rotate modules
 - Resize placement regions
+- Adjust component placement within modules
+- Re-run simulation after changes
 
 AI validates:
 
@@ -215,7 +240,7 @@ AI validates:
 
 ---
 
-### Step 5 — Generate Product Assets
+### Step 6 — Generate Product Assets
 
 HardwarePilot synchronizes:
 
@@ -278,6 +303,32 @@ Future:
 
 ---
 
+### Circuit Simulator
+
+Component-level schematic within each functional module:
+
+- Add/remove components: resistors, capacitors, inductors, diodes, transistors, ICs, connectors, voltage sources
+- Wire nets between component pins (within module and across module boundaries)
+- Assign component values, tolerances, part numbers, footprints
+- Simulation types: DC operating point, DC sweep, AC small-signal, transient
+- Waveform viewer: plot voltages and currents, probe any net or component pin
+- Simulation engine: ngspice / PySpice running in `apps/compute`
+
+AI assistance for circuit design:
+
+- Suggest component values based on module requirements
+- Detect circuit topology issues (floating nodes, missing pull-ups, backward diodes)
+- Validate against module constraints (voltage range, current budget, power dissipation)
+- Auto-generate netlist for simulation from graph state
+
+Outputs:
+
+- SPICE netlist (derived from graph, always regenerable)
+- Simulation results (waveform data, operating point tables)
+- Circuit validation report (warnings, errors, suggestions)
+
+---
+
 ### Design Review
 
 Detect:
@@ -291,9 +342,9 @@ Detect:
 
 ## Out of Scope (MVP)
 
-- Full schematic editor
-- Full PCB editor
-- Full CAD replacement
+- Full schematic editor (hierarchical sheets, ERC, net classes, bus routing — MVP has component-level schematic within modules only)
+- Full PCB editor (trace routing, copper pours, DRC)
+- Full CAD replacement (parametric modeling, assemblies, drawings)
 - Firmware IDE
 - Manufacturing marketplace
 
@@ -303,15 +354,18 @@ Detect:
 
 ### User Value
 
-- Reduced prototype iteration time
+- Reduced prototype iteration time (simulate before building)
 - Faster enclosure creation
 - Better hardware design decisions
+- Fewer design errors caught after manufacturing (catch in simulation first)
+- Validated circuits that work on first prototype
 
 ### Product Metrics
 
 - Weekly active projects
 - Generated hardware architectures
 - Generated enclosures
+- Simulation runs per project
 - AI interactions per project
 
 ### Business Metrics
@@ -334,8 +388,15 @@ Users describe:
 The platform determines:
 
 - Electronics architecture
+- Component selection and circuit topology
 - PCB strategy
 - Enclosure design
 - Manufacturing considerations
+
+The platform validates:
+
+- Circuit behavior through SPICE simulation
+- Mechanical fit through 3D analysis
+- Manufacturability through DFM rules
 
 allowing creators to focus on product ideas rather than toolchain complexity.

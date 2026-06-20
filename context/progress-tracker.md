@@ -60,42 +60,50 @@ Vision, architecture, AI rules, UI language, code standards, and tracker defined
 
 ---
 
-# Phase 2 — Hardware Context Engine + Module Graph
+# Phase 2 — Hardware Context Engine + Module Graph + Schematic
 
 **Status:** Not Started (0%)
 
 ## Tasks
 
-- [ ] Module, Constraint, Decision Prisma models (graph nodes + edges)
-- [ ] React Flow module graph canvas
+- [ ] Module, Component, Net, Constraint, Decision Prisma models (graph nodes + edges)
+- [ ] Component schema: type (R, C, L, diode, transistor, IC, connector, source), value, tolerance, part number, footprint, pin definitions
+- [ ] Net schema: connections between component pins (within module) and module ports (across modules)
+- [ ] React Flow module graph canvas (module-level view)
+- [ ] Component-level schematic canvas within each module (add components, wire pins)
 - [ ] Module CRUD UI (add, move, edit modules)
-- [ ] Constraint definition UI
+- [ ] Constraint definition UI (mechanical + electrical)
 - [ ] Decision log panel
 
 ## Relevant Context
 
-- architecture.md — Hardware Context Graph, Domain Model
+- project.md — Form-First Workflow Step 2, Step 4
+- architecture.md — Hardware Context Graph (now includes Components, Nets), Domain Model (Module expanded)
 - ai-workflow-rules.md — Rule 1 (respect the graph), Rule 6 (decision logging)
 
 ---
 
-# Phase 3 — AI Hardware Assistant + Constraint Negotiation
+# Phase 3 — AI Assistant + Constraint Negotiation + Circuit Simulation
 
 **Status:** Not Started (0%)
 
 ## Tasks
 
 - [ ] FastAPI compute service scaffold + gRPC contract
-- [ ] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent
-- [ ] Constraint negotiation engine (Python)
+- [ ] ngspice / PySpice integration in `apps/compute`
+- [ ] SPICE netlist generation from component + net graph
+- [ ] Simulation gRPC service (submit job, stream progress, return results)
+- [ ] AI SDK 6 integration: Intent Agent, Module Agent, Constraint Agent, Circuit Agent
+- [ ] Constraint negotiation engine (Python) — mechanical + electrical
+- [ ] Waveform viewer UI (plot simulation results: voltage, current, power)
 - [ ] AI chat dock (free-form questions)
 - [ ] Activity / Decisions feed + proposal Approve/Reject UI
 - [ ] Risk-tier enforcement (low = auto, medium / high = proposal)
 
 ## Relevant Context
 
-- project.md — AI Hardware Assistant
-- architecture.md — AI Layer (Intent, Module, Constraint agents)
+- project.md — AI Hardware Assistant, Circuit Simulator
+- architecture.md — AI Layer (Intent, Module, Constraint, Circuit agents), Constraint Negotiation Engine
 - ai-workflow-rules.md — Rule 3 (explain decisions), Rule 5 (risk tiers), Rule 8 (specialized agents)
 
 ---
@@ -150,7 +158,6 @@ Tracked as backlog, not phased. Revisit when MVP complete.
 - [ ] Flex PCB design
 - [ ] Automated routing
 - [ ] Supplier selection
-- [ ] Simulation
 - [ ] DFM validation
 
 ## Relevant Context

@@ -5,7 +5,8 @@
 | Layer | Choice |
 |-------|--------|
 | Frontend + API | Next.js 16 (App Router, RSC, server actions, route handlers) |
-| Compute service | Python FastAPI (geometry, constraint solving, enclosure generation) |
+| Compute service | Python FastAPI (geometry, constraint solving, enclosure generation, SPICE simulation) |
+| Simulation engine | ngspice / PySpice (runs in `apps/compute`, called via gRPC) |
 | Database | PostgreSQL 17 (Docker) |
 | ORM | Prisma v7 |
 | Styling | Tailwind v4 + shadcn/ui |
@@ -190,9 +191,9 @@ React error boundaries (`error.tsx` in App Router) catch render errors only — 
 ## Why gRPC
 
 - Typed contract on both sides
-- Efficient for mesh and geometry payloads (binary protobuf vs JSON)
+- Efficient for mesh, geometry, and simulation payloads (binary protobuf vs JSON)
 - Codegen eliminates hand-written API client drift
-- Streaming support for long-running enclosure generation
+- Streaming support for long-running enclosure generation and simulation jobs
 
 ## Codegen
 
