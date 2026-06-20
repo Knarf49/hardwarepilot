@@ -75,6 +75,7 @@ export function ChatDock({ projectId }: { projectId?: string }) {
           </div>
 
           <ThreadSelector
+            projectId={projectId ?? null}
             activeThreadId={activeThreadId}
             refreshKey={refreshKey}
             onSelect={setActiveThreadId}
