@@ -4,7 +4,10 @@ import {
   addEdge,
   Background,
   Controls,
+  type Edge,
   MiniMap,
+  type Node,
+  type NodeProps,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -12,8 +15,7 @@ import {
 import { useCallback } from "react";
 import "@xyflow/react/dist/style.css";
 import type { ModuleModel } from "@hardwarepilot/db";
-import type { Edge, Node } from "@xyflow/react";
-import { saveModulePosition } from "@/actions/module";
+import { deleteModule, saveModulePosition } from "@/actions/module";
 
 interface ModuleConnection {
   id: string;
@@ -30,6 +32,17 @@ interface ModuleGraphCanvasProps {
   projectId: string;
 }
 
+function ModuleNode({ data }: NodeProps) {
+  return (
+    <div className="px-3 py-2 min-w-[120px]">
+      <div className="font-medium text-neutral-100 text-sm">{data.name as string}</div>
+      <div className="text-xs text-neutral-500 capitalize">{data.type as string}</div>
+    </div>
+  );
+}
+
+const nodeTypes = { moduleNode: ModuleNode };
+
 function buildNodesAndEdges(
   modules: ModuleModel[],
   connections: ModuleConnection[],
@@ -38,16 +51,9 @@ function buildNodesAndEdges(
     const pos = m.position as { x: number; y: number; z: number } | null;
     return {
       id: m.id,
-      type: "default",
+      type: "moduleNode",
       position: pos ? { x: pos.x, y: pos.y } : { x: i * 200 + 80, y: 200 },
-      data: {
-        label: (
-          <div className="px-3 py-2 min-w-[120px]">
-            <div className="font-medium text-neutral-100 text-sm">{m.name}</div>
-            <div className="text-xs text-neutral-500 capitalize">{m.type}</div>
-          </div>
-        ),
-      },
+      data: { name: m.name, type: m.type },
       style: {
         background: "#171717",
         border: "1px solid #262626",
@@ -91,15 +97,30 @@ export function ModuleGraphCanvas({ modules, connections, projectId }: ModuleGra
     [projectId],
   );
 
+  const onNodesDelete = useCallback(
+    (deletedNodes: Node[]) => {
+      for (const node of deletedNodes) {
+        const formData = new FormData();
+        formData.set("moduleId", node.id);
+        formData.set("projectId", projectId);
+        deleteModule(null, formData);
+      }
+    },
+    [projectId],
+  );
+
   return (
     <div className="w-full h-[500px] rounded-xl border border-neutral-800 overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
+        onNodesDelete={onNodesDelete}
+        deleteKeyCode={["Delete", "Backspace"]}
         fitView
         attributionPosition="bottom-left"
         className="bg-neutral-950"
