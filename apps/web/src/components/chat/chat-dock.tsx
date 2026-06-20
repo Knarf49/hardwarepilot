@@ -196,6 +196,13 @@ function ChatMessages({
             )}
           >
             {msg.parts?.map((part, i) => {
+              if (
+                part.type === "step-start" ||
+                part.type === "step-finish" ||
+                part.type === "tool-invocation"
+              ) {
+                return null;
+              }
               if (part.type === "text" && part.text) {
                 if (msg.role === "assistant") {
                   return (
@@ -206,11 +213,14 @@ function ChatMessages({
                 // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
                 return <span key={i}>{part.text}</span>;
               }
-              if (part.type === "step-start" || part.type === "step-finish" || part.type === "tool-invocation") {
-                return null;
-              }
               const text = (part as { text?: string }).text;
               if (text) {
+                if (msg.role === "assistant") {
+                  return (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
+                    <ReactMarkdown key={i}>{text}</ReactMarkdown>
+                  );
+                }
                 // biome-ignore lint/suspicious/noArrayIndexKey: parts immutable
                 return <span key={i}>{text}</span>;
               }
